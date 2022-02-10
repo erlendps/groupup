@@ -16,6 +16,9 @@ class Interest(models.Model):
 
     name = models.CharField(max_length=30)
 
+    class Meta:
+        db_table = 'interest'
+
 
 class GroupUpUser(models.Model):
     """Represents a user who uses 
@@ -23,8 +26,11 @@ class GroupUpUser(models.Model):
     Has a one to one relation to Django's predefined user model
     and has other fields as well
     """
-    
+
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     profile_pic = models.ImageField(upload_to = user_image_path)
     interests = models.ManyToManyField(Interest)
+
+    class Meta:
+        db_table = 'groupupuser'
 
