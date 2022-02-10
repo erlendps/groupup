@@ -18,5 +18,6 @@ from django.urls import include, path
 from views import home
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('home/', home.hello)
+    path('home/', home.hello),
+    path("login/", include("groupup.accounts.urls")),
 ]
