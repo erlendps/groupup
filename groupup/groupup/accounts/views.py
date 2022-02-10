@@ -5,8 +5,9 @@ from django.http    import HttpResponse
 
 # Create your views here.
 def register(request):
-    return render(request, "accounts/registerForm.html")
+    print(request.POST.get)
+    return render(request, "registration/registerForm.html")
 
     # Create your views here.
 def index(request):
-    return render(request, "accounts/index.html")
+    return render(request, "groupup/accounts/templates/registration/index.html")
