@@ -22,6 +22,9 @@ class Interest(models.Model):
     class Meta:
         db_table = 'interest'
 
+    def __str__(self):
+        return self.name
+
 
 class GroupUpUser(models.Model):
     """Represents a user who uses 
@@ -32,11 +35,14 @@ class GroupUpUser(models.Model):
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     profile_pic = models.ImageField(upload_to = user_image_path)
-    interests = models.ManyToManyField(Interest)
+    interests = models.ManyToManyField(Interest, blank=True)
     birthday = models.DateField(blank=True, null=True)
 
     class Meta:
         db_table = 'groupupuser'
+    
+    def __str__(self):
+        return self.user.username
 
 
 def group_image_path(instance, filename):
@@ -50,10 +56,10 @@ class UserGroup(models.Model):
     name = models.CharField(max_length=30)
     description = models.CharField(max_length=250)
     num_of_members = models.IntegerField(default=1)
-    interests = models.ManyToManyField(Interest)
+    interests = models.ManyToManyField(Interest, blank=True)
     group_pic = models.ImageField(upload_to=group_image_path)
     members = models.ManyToManyField(GroupUpUser)
-    group_admin = models.ForeignKey(on_delete=models.CASCADE)
+    group_admin = models.ForeignKey(GroupUpUser, on_delete=models.CASCADE, related_name="group_admin")
 
     class Meta:
         db_table = 'user_group'
@@ -68,4 +74,7 @@ class UserGroup(models.Model):
             if member.birthday < oldest:
                 oldest = member.birthday
         return "{0}-{1}".format(relativedelta.relativedelta(youngest, today).years, relativedelta(oldest, today).years)
+    
+    def __str__(self):
+        return self.name
         
