@@ -1,3 +1,7 @@
 from django.contrib import admin
 
-# Register your models here.
+from .models import GroupUpUser, UserGroup, Interest
+
+admin.site.register(GroupUpUser)
+admin.site.register(UserGroup)
+admin.site.register(Interest)
