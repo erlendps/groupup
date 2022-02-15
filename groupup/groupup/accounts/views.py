@@ -11,10 +11,9 @@ def group_site(request, pk):
 
 
 # Create your views here.
-def landing(request):
-    template = loader.get_template('accounts/templates/landing.html')
+def home(request):
     context = {
         'name': 'Matias',
     }
-    return render(request, )
+    return render(request, "accounts/home.html", context)
 
