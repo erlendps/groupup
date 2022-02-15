@@ -69,12 +69,12 @@ class UserGroup(models.Model):
         today = datetime.date.today()
         youngest = datetime.date(1900, 1, 1)
         oldest = datetime.date(2100, 1, 1)
-        for member in self.members_set.all():
+        for member in self.members.all():
             if member.birthday > youngest:
                 youngest = member.birthday
             if member.birthday < oldest:
                 oldest = member.birthday
-        return "{0}-{1}".format(relativedelta.relativedelta(youngest, today).years, relativedelta(oldest, today).years)
+        return "{0}-{1}".format(abs(relativedelta(youngest, today).years), abs(relativedelta(oldest, today).years))
     
     def __str__(self):
         return self.name
