@@ -1,13 +1,14 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
+  {% block title %}<title>Landing page</title>{% endblock %}
 </head>
 <body>
-  <main>
-    {% block content %}
-    
-    {% endblock %}
-  </main>
+  {% block sidebar %} GroupUp {% endblock %}
+  {% block content %}<!-- default content text (typically empty) -->{% endblock %}
+  <nav>
+    <a>
+  </nav>
 </body>
+
 </html>
