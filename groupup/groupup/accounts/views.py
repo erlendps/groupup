@@ -5,4 +5,4 @@ from django.http    import HttpResponse
 
 # Create your views here.
 def landing(request):
-    return render(request, "accounts/templates/landing.html")
+    return render(request, "templates/landing.html")
