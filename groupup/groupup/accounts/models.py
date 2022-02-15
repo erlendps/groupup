@@ -1,4 +1,5 @@
 from pyexpat import model
+from tokenize import blank_re
 from django.db import models
 from django.contrib.auth.models import User
 import datetime
@@ -34,7 +35,7 @@ class GroupUpUser(models.Model):
     """
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    profile_pic = models.ImageField(upload_to = user_image_path)
+    profile_pic = models.ImageField(upload_to = user_image_path, blank=True)
     interests = models.ManyToManyField(Interest, blank=True)
     birthday = models.DateField(blank=True, null=True)
 
@@ -57,7 +58,7 @@ class UserGroup(models.Model):
     description = models.CharField(max_length=250)
     num_of_members = models.IntegerField(default=1)
     interests = models.ManyToManyField(Interest, blank=True)
-    group_pic = models.ImageField(upload_to=group_image_path)
+    group_pic = models.ImageField(upload_to=group_image_path, blank=True)
     members = models.ManyToManyField(GroupUpUser)
     group_admin = models.ForeignKey(GroupUpUser, on_delete=models.CASCADE, related_name="group_admin")
 

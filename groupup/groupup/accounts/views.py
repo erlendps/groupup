@@ -4,5 +4,8 @@ from django.http    import HttpResponse
 
 
 # Create your views here.
-def index(request):
-    return render(request, "accounts/index.html")
+def homepage(request):
+    return render(request, "accounts/home.html")
+
+def group_site(request, pk):
+    return render(request, "accounts/group_site.html")
