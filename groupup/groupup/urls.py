@@ -21,7 +21,8 @@ from django.views.generic.base import TemplateView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', include('groupup.accounts.urls'), name='home'),
     path('accounts/', include('django.contrib.auth.urls')),
-    path('', TemplateView.as_view(template_name='home.html'), name='home'),
-    path('landing/', TemplateView.as_view(template_name='landing.html'), name='landing'),
+    #path('', TemplateView.as_view(template_name='home.html'), name='home'),
+    #path('groups/', include('groupup.accounts.urls'), name='groups'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
