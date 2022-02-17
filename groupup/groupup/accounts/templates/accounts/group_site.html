@@ -1,7 +1,22 @@
 {% extends 'accounts/base.html' %}
 
-{% block title %}Group Site{% endblock %}
+{% block title %}Group Site for {{ group.name }}{% endblock %}
 
 {% block content %}
-<h1>Hello world</h1>
+<h1>{{ group.name }}</h1>
+<ul>
+    {% for interest in group.interests.all %}
+        <li>{{ interest.name }}</li>
+    {% endfor %}
+</ul>
+<p>{{ group.get_age_gap }}</p>
+<img src="{{ MEDIA_URL }}{{ group.group_pic.url }}">
+<p>{{ group.description }}</p>
+<ul>
+    {% for member in group.members.all %}
+        <li>{{ member.user.username }}</li>
+    {% endfor %}
+</ul>
+
+{% block admin_content %}{% endblock %}
 {% endblock %}

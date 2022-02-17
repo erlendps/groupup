@@ -1,0 +1,25 @@
+{% extends 'accounts/group_site.html' %}
+{% block admin_content %}
+{% if group in user.groupupuser.get_groups_where_admin %}
+  <a class="btn" href="#">Edit group</a>
+{% else %}
+  <p>You are administrator of these groups:</p>
+  <ul>
+    {% for usergroup in user.groupupuser.get_groups_where_admin %}
+      <li>{{ usergroup.name }}</li>
+    {% endfor %}
+  </ul>
+
+  <ul>
+  {% for usergroup in user.groupupuser.get_groups_where_admin %}
+    {% if group not in usergroup.get_related_groups %}
+      <li>
+        <a href="/matching/sendmatchrequest/{{ usergroup.id }}">
+        Send match request for {{ usergroup.name }}
+        </a>
+      </li>
+    {% endif %}
+  {% endfor %}
+  </ul>
+{% endif%}
+{% endblock %}
