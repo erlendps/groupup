@@ -2,7 +2,22 @@
 
 {% block title %}Home{% endblock %}
 {% block content %}
-<div>
-  
+<div id="main" class="box" style="display: flex; flex-direction: row;" >
+  <div id="groups" class="container" style="border: 0.5em; border-style: solid; margin: 2em; width: 500px;">
+    <h2>Groups</h2>
+    <ul>
+      <li>Group 1</li>
+      <li>Group 2</li>
+      <li>Group 3</li>
+    </ul>
+  </div>
+  <div id="feed" class="container" style="border: 0.5em; border-style: solid; margin: 2em;">
+    <h2>Feed</h2>
+    <ul>
+      <li>Feed 1</li>
+      <li>Feed 2</li>
+      <li>Feed 3</li>
+    </ul>
+  </div>
 </div>
 {% endblock %}
