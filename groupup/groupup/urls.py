@@ -25,4 +25,5 @@ urlpatterns = [
     path('home/', home.hello),
     path("", include("groupup.accounts.urls")),
     path('accounts/', include('django.contrib.auth.urls')),
+    path('matching/', include('groupup.group_matching.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
