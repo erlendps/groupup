@@ -1,9 +1,12 @@
 from pyexpat import model
 from tokenize import blank_re
+from urllib import request
 from django.db import models
 from django.contrib.auth.models import User
 import datetime
 from dateutil.relativedelta import relativedelta
+from django.dispatch import receiver
+from groupup.group_matching.models import Matches
 
 
 
@@ -42,6 +45,21 @@ class GroupUpUser(models.Model):
     class Meta:
         db_table = 'groupupuser'
     
+
+    def is_a_group_admin(self):
+        return len(self.get_groups_where_admin()) > 0
+
+    def get_groups(self):
+        return self.usergroup_set.all()
+    
+    def get_groups_where_admin(self):
+        groups = []
+        for group in self.get_groups():
+            if self == group.group_admin:
+                groups.append(group)
+        return groups
+
+
     def __str__(self):
         return self.user.username
 
@@ -64,6 +82,9 @@ class UserGroup(models.Model):
 
     class Meta:
         db_table = 'user_group'
+        permissions = (
+            ("group_admin", "Create and respond to group matches"),
+        )
 
     def get_age_gap(self):
         today = datetime.date.today()
@@ -75,6 +96,27 @@ class UserGroup(models.Model):
             if member.birthday < oldest:
                 oldest = member.birthday
         return "{0}-{1}".format(abs(relativedelta(youngest, today).years), abs(relativedelta(oldest, today).years))
+
+    def get_related_groups(self):
+        """Finds all groups that are related, i.e there is a record in matches table containg this group."""
+
+        received_matches = list(Matches.objects.filter(receiver=self))
+        requested_matches = list(Matches.objects.filter(requestor=self))
+        requestors = []
+        receivers = []
+
+        for match in received_matches:
+            requestors.append(match.requestor)
+        for match in requested_matches:
+            receivers.append(match.receiver)
+
+        return requestors + receivers
+    
+    def has_relation_with(self, group):
+        received_matches = list(Matches.objects.filter(receiver=self, requestor=group))
+        requested_matches = list(Matches.objects.filter(receiver=group, requestor=self))
+        return len(received_matches+requested_matches) != 0
+        
     
     def __str__(self):
         return self.name
