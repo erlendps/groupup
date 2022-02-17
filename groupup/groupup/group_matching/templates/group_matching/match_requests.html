@@ -1,0 +1,11 @@
+{% extends 'accounts/base.html' %}
+
+{% block content %}
+<ul>
+  {% for group in requesting_groups %}
+    <li>
+      <a href='/admin/handle_requests/{{ group.id }}'>{{ group.name }} has requested a match</a>
+    </li>
+  {% endfor %}
+</ul>
+{% endblock %}

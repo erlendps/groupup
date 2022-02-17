@@ -1,0 +1,9 @@
+{% extends 'accounts/group_site.html' %}
+
+{% block admin_content %}
+  <form method="post">
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" value="OK">
+  </form>
+{% endblock %}

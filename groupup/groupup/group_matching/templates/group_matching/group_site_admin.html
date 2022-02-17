@@ -14,7 +14,7 @@
   {% for usergroup in user.groupupuser.get_groups_where_admin %}
     {% if group not in usergroup.get_related_groups %}
       <li>
-        <a href="/matching/sendmatchrequest/{{ usergroup.id }}">
+        <a href="/admin/sendmatchrequest/{{ usergroup.id }}">
         Send match request for {{ usergroup.name }}
         </a>
       </li>

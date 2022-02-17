@@ -63,6 +63,9 @@ class GroupUpUser(models.Model):
     def __str__(self):
         return self.user.username
 
+    def is_admin_of(self, group):
+        return self == group.group_admin
+
 
 def group_image_path(instance, filename):
     group_name = instance.name
@@ -97,21 +100,27 @@ class UserGroup(models.Model):
                 oldest = member.birthday
         return "{0}-{1}".format(abs(relativedelta(youngest, today).years), abs(relativedelta(oldest, today).years))
 
-    def get_related_groups(self):
-        """Finds all groups that are related, i.e there is a record in matches table containg this group."""
-
+    def get_matchrequesting_groups(self):
         received_matches = list(Matches.objects.filter(receiver=self))
-        requested_matches = list(Matches.objects.filter(requestor=self))
         requestors = []
-        receivers = []
 
         for match in received_matches:
             requestors.append(match.requestor)
+        return requestors
+    
+    def get_matchreceiving_groups(self):
+        requested_matches = list(Matches.objects.filter(requestor=self))
+        receivers = []
+
         for match in requested_matches:
             receivers.append(match.receiver)
+        return receivers
 
-        return requestors + receivers
-    
+    def get_related_groups(self):
+        """Finds all groups that are related, i.e there is a record in matches table containg this group."""
+
+        return self.get_matchreceiving_groups() + self.get_matchrequesting_groups()
+
     def has_relation_with(self, group):
         received_matches = list(Matches.objects.filter(receiver=self, requestor=group))
         requested_matches = list(Matches.objects.filter(receiver=group, requestor=self))
