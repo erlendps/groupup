@@ -1,12 +1,32 @@
 {% extends 'accounts/base.html' %}
 
 {% block title %}Home{% endblock %}
-
 {% block content %}
-{% if user.is_authenticated %}
-  Hi {{ user.username }}!
-{% else %}
-  <p>You are not logged in</p>
-  <a href="{% url 'login' %}">Log In</a>
-{% endif %}
+<div id="main" class="box" style="display: flex; flex-direction: row;" >
+  <div id="groups" class="container" style="border: 0.1em; border-style: solid; margin: 2em; width: fit-content;">
+    <div id="groups" class="container" style="margin: 2em; width: fit-content;">
+      <h2>Groups</h2>
+    </div>
+    <div id="groups" class="container" style="margin: 2em; width: fit-content;">
+      <ul style="list-style-type: none">
+        <li>Group 1</li>
+        <li>Group 2</li>
+        <li>Group 3</li>
+      </ul>
+    </div>
+  </div>
+  <div class="vl" style="height: 1000px; border-left: 6px solid black;"></div>
+  <div id="feed" class="container" style="border: 0.1em; border-style: solid; margin: 2em;">
+    <div id="groups" class="container" style="margin: 2em; width: fit-content;">
+      <h2>Feed</h2>
+    </div>
+    <div id="groups" class="container" style="margin: 2em; width: fit-content;">
+      <ul style="list-style-type: none">
+        <li>Feed 1</li>
+        <li>Feed 2</li>
+        <li>Feed 3</li>
+      </ul>
+    </div>
+  </div>
+</div>
 {% endblock %}

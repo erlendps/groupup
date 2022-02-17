@@ -1,13 +1,57 @@
 <!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <title>{% block title %}Django Auth Tutorial{% endblock %}</title>
-</head>
-<body>
-  <main>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    {# Load the tag library #}
+    {% load bootstrap5 %}
+
+    {# Load CSS and JavaScript #}
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+
+    {# Display django.contrib.messages as Bootstrap alerts #}
+    {% bootstrap_messages %}
+  </head>
+  <body>
+    {% if user.is_authenticated %}
+    <nav class="navbar sticky-top navbar-dark bg-dark">
+      <div class="container" style="margin-left: 0cm; justify-content: left;" >
+        <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
+          <span class="navbar-toggler-icon"> </span>
+        </button>
+        <a class="navbar-brand" style="margin-left: 0.3cm;" href="#">GroupUp</a>
+        <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasNavbarLabel">GroupUp</h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="#" style="color: black;">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="#" style="color: black;">Groups</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="#" style="color: black;">Profile</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+        <!--
+          <a class="btn btn-danger" href="{% url 'logout' %}">Logout</a> 
+        -->
+    </nav>
     {% block content %}
     {% endblock %}
-  </main>
-</body>
+    {% else %}
+      {% block login %}
+      <p>You are not logged in</p>
+      <a href="{% url 'login' %}">Log In</a>
+      {% endblock %}
+    {% endif %}
+  </body>
 </html>
