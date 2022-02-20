@@ -8,6 +8,8 @@ from .forms import HandleRequestForm
 
 @login_required
 def group_browsing(request, pk):
+    """View for group site that has some extra functionality for the admin."""
+
     if not request.user.groupupuser.is_a_group_admin():
         return redirect("/groups/{0}".format(pk))
     request.session["pp_groupbrowsing"] = True
@@ -19,6 +21,13 @@ def group_browsing(request, pk):
 
 @login_required
 def send_match_request(request, pk):
+    """Sends a match requests based on the session cookie group_pk.
+    
+    Does a few checks, for instance, it checks that the admin in fact is matching
+    on behalf of a group he is admin of. It also checks if there is already a relation
+    between the two groups. If all checks pass, a new match request is created.
+    """
+
     if "pp_groupbrowsing" in request.session:
         requestor_group = UserGroup.objects.get(pk=pk)
         receiver_group = UserGroup.objects.get(pk=request.session.get("group_pk"))
@@ -45,6 +54,7 @@ def send_match_request(request, pk):
 
 @login_required
 def view_match_requests(request, pk):
+    """Returns a view with a list of all groups that has requested a match with the group with primary_key=pk."""
     if not request.user.groupupuser.is_a_group_admin():
         return redirect("/groups/{0}".format(pk))
     group = UserGroup.objects.get(pk=pk)
@@ -53,6 +63,8 @@ def view_match_requests(request, pk):
         raise Http404
     request.session['pp_viewmatches'] = True
     request.session['group_pk'] = pk
+    
+    # get matches (and therefore groups) where the status is pending
     requesting_groups = []
     matches = group.get_matches(True)
     for match in matches:
@@ -63,6 +75,11 @@ def view_match_requests(request, pk):
 
 @login_required
 def handle_match_request(request, pk):
+    """Handle a match request, e.g accept or decline.
+    
+    Creates a HandleRequestForm, and renders it. If the input is valid,
+    the status will be set according to the POST-request.
+    """
     if 'pp_viewmatches' in request.session:
         requesting_group = UserGroup.objects.get(pk=pk)
         receiving_group = UserGroup.objects.get(pk=request.session.get('group_pk'))

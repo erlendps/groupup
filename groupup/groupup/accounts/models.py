@@ -1,11 +1,7 @@
-from pyexpat import model
-from tokenize import blank_re
-from urllib import request
 from django.db import models
 from django.contrib.auth.models import User
 import datetime
 from dateutil.relativedelta import relativedelta
-from django.dispatch import receiver
 from groupup.group_matching.models import Matches
 
 
@@ -31,7 +27,7 @@ class Interest(models.Model):
 
 
 class GroupUpUser(models.Model):
-    """Represents a user who uses 
+    """Represents a user who uses the app
     
     Has a one to one relation to Django's predefined user model
     and has other fields as well
@@ -47,27 +43,36 @@ class GroupUpUser(models.Model):
     
 
     def is_a_group_admin(self):
+        """Returns true if the user is a group admin."""
+
         return len(self.get_groups_where_admin()) > 0
 
     def get_groups(self):
-        return self.usergroup_set.all()
+        """Returns a list of all groups the user is connected to."""
+
+        return list(self.usergroup_set.all())
     
     def get_groups_where_admin(self):
+        """Returns a list of all groups where the user is admin."""
+
         groups = []
         for group in self.get_groups():
             if self == group.group_admin:
                 groups.append(group)
         return groups
 
+    def is_admin_of(self, group):
+        """Returns true if the user is the group admin of the given group."""
+
+        return self == group.group_admin
 
     def __str__(self):
         return self.user.username
 
-    def is_admin_of(self, group):
-        return self == group.group_admin
-
 
 def group_image_path(instance, filename):
+    """Returns a path for the image for a group."""
+
     group_name = instance.name
     pk_string = instance.id
     extension = filename.rsplit('.', 1)[1]
@@ -75,6 +80,12 @@ def group_image_path(instance, filename):
 
 
 class UserGroup(models.Model):
+    """Represents a group.
+    
+    A group has multiple fields, such as name, description. It has a many to many relation
+    to GroupUpUsers and a special field (group_admin), which is a one to many field.
+    """
+
     name = models.CharField(max_length=30)
     description = models.CharField(max_length=250)
     num_of_members = models.IntegerField(default=1)
@@ -86,10 +97,12 @@ class UserGroup(models.Model):
     class Meta:
         db_table = 'user_group'
         permissions = (
-            ("group_admin", "Create and respond to group matches"),
+            ("group_admin", "Create and respond to group matches"), # probably can be removed
         )
 
     def get_age_gap(self):
+        """Returns the age gap in a group, represented as a string."""
+
         today = datetime.date.today()
         youngest = datetime.date(1900, 1, 1)
         oldest = datetime.date(2100, 1, 1)
@@ -101,11 +114,15 @@ class UserGroup(models.Model):
         return "{0}-{1}".format(abs(relativedelta(youngest, today).years), abs(relativedelta(oldest, today).years))
 
     def get_matches(self, is_receiver):
+        """Returns a list of matches where either the group is the receiver or requestor of a match request."""
+
         if is_receiver:
             return list(Matches.objects.filter(receiver=self))
         return list(Matches.objects.filter(requestor=self))
 
     def get_matchrequesting_groups(self):
+        """Returns a list of groups that has requested a match with self."""
+
         received_matches = self.get_matches(True)
         requestors = []
 
@@ -114,6 +131,8 @@ class UserGroup(models.Model):
         return requestors
     
     def get_matchreceiving_groups(self):
+        """Returns a list of groups that has received a match request from self."""
+
         requested_matches = self.get_matches(False)
         receivers = []
 
@@ -127,6 +146,8 @@ class UserGroup(models.Model):
         return self.get_matchreceiving_groups() + self.get_matchrequesting_groups()
 
     def has_relation_with(self, group):
+        """Returns true if self has a relation with the given group."""
+
         received_matches = list(Matches.objects.filter(receiver=self, requestor=group))
         requested_matches = list(Matches.objects.filter(receiver=group, requestor=self))
         return len(received_matches+requested_matches) != 0
