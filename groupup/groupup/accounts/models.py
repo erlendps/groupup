@@ -140,6 +140,19 @@ class UserGroup(models.Model):
             receivers.append(match.receiver)
         return receivers
 
+    def get_confirmed_groups(self):
+        """Returns a list of groups that self has a confirmed match with."""
+        
+        confirmed_groups = []
+        for match in self.get_matches(True):
+            if match.status == "confirmed":
+                confirmed_groups.append(match.requestor)
+        for match in self.get_matches(False):
+            if match.status == "confirmed":
+                confirmed_groups.append(match.receiver)
+        
+        return confirmed_groups
+
     def get_related_groups(self):
         """Finds all groups that are related, i.e there is a record in matches table containg this group."""
 
