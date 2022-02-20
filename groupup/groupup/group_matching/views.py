@@ -1,6 +1,4 @@
-from multiprocessing import context
-from django.dispatch import receiver
-from django.http import Http404, HttpResponse, HttpResponseRedirect
+from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from groupup.accounts.models import UserGroup
@@ -17,6 +15,7 @@ def group_browsing(request, pk):
     group = UserGroup.objects.get(pk=pk)
     context = {"group": group}
     return render(request, "group_matching/group_site_admin.html", context)
+
 
 @login_required
 def send_match_request(request, pk):
@@ -40,7 +39,7 @@ def send_match_request(request, pk):
         match = Matches(requestor=requestor_group, receiver=receiver_group)
         match.save()
         del request.session["pp_groupbrowsing"]
-        return redirect("/matching/group/{0}".format(receiver_group.id))
+        return redirect("/admin/group/{0}".format(receiver_group.id))
     else:
         raise Http404
 
@@ -54,8 +53,12 @@ def view_match_requests(request, pk):
         raise Http404
     request.session['pp_viewmatches'] = True
     request.session['group_pk'] = pk
-    requesting_groups = group.get_matchrequesting_groups()
-    context = {'requesting_groups': requesting_groups}
+    requesting_groups = []
+    matches = group.get_matches(True)
+    for match in matches:
+        if match.status == 'pending':
+            requesting_groups.append(match.requestor)
+    context = {'requesting_groups': requesting_groups, 'groupname': group.name}
     return render(request, 'group_matching/match_requests.html', context)
 
 @login_required
@@ -72,7 +75,8 @@ def handle_match_request(request, pk):
                 status = form.cleaned_data['status']
                 match = Matches.objects.get(requestor=requesting_group, receiver=receiving_group)
                 match.status = status
-                return HttpResponseRedirect('matching/viewmatchrequests/{0}'.format(receiving_group.id))
+                match.save()
+                return HttpResponseRedirect('/admin/viewmatchrequests/{0}'.format(receiving_group.id))
         else:
             form = HandleRequestForm()
         context = {'group': requesting_group, 'form': form}

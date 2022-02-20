@@ -100,8 +100,13 @@ class UserGroup(models.Model):
                 oldest = member.birthday
         return "{0}-{1}".format(abs(relativedelta(youngest, today).years), abs(relativedelta(oldest, today).years))
 
+    def get_matches(self, is_receiver):
+        if is_receiver:
+            return list(Matches.objects.filter(receiver=self))
+        return list(Matches.objects.filter(requestor=self))
+
     def get_matchrequesting_groups(self):
-        received_matches = list(Matches.objects.filter(receiver=self))
+        received_matches = self.get_matches(True)
         requestors = []
 
         for match in received_matches:
@@ -109,7 +114,7 @@ class UserGroup(models.Model):
         return requestors
     
     def get_matchreceiving_groups(self):
-        requested_matches = list(Matches.objects.filter(requestor=self))
+        requested_matches = self.get_matches(False)
         receivers = []
 
         for match in requested_matches:

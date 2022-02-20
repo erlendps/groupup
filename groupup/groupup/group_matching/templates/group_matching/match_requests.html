@@ -1,6 +1,10 @@
 {% extends 'accounts/base.html' %}
 
+{% block title %}Match requests for {{ groupname }}{% endblock %}
+
+
 {% block content %}
+<h1>Match requests for {{ groupname }}</h1>
 <ul>
   {% for group in requesting_groups %}
     <li>
