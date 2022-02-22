@@ -13,8 +13,9 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.conf import settings
 from django.contrib import admin
-from django.urls import path
+from django.urls import include, path
 from views import home
 
 urlpatterns = [
@@ -22,4 +23,5 @@ urlpatterns = [
     path('', include('groupup.accounts.urls'), name='home'),
     path('accounts/', include('django.contrib.auth.urls')),
     path('admin/', include('groupup.group_matching.urls')),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    path('groups/', include('groupup.group_creation.urls')),
+] 

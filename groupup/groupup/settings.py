@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'groupup.accounts',
     'groupup.group_matching',
     'bootstrap5',
+    'groupup.group_creation',
 ]
 
 MIDDLEWARE = [
