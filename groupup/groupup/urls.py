@@ -18,8 +18,8 @@ from django.urls import path
 from views import home
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('djangoadmin/', admin.site.urls),
     path('', include('groupup.accounts.urls'), name='home'),
     path('accounts/', include('django.contrib.auth.urls')),
-    path('matching/', include('groupup.group_matching.urls')),
+    path('admin/', include('groupup.group_matching.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

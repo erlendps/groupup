@@ -1,0 +1,13 @@
+{% extends 'accounts/base.html' %}
+{% block title %}Matches for {{ usergroup.name }}{% endblock %}
+
+{% block content %}
+<h1>Matches for {{ usergroup.name }}</h1>
+<ul>
+  {% for group in confirmed_groups %}
+    <li>
+      <a href="/groups/{{ group.id }}">Matched with {{ group.name }}</a>
+    </li>
+  {% endfor %}
+</ul>
+{% endblock %}
