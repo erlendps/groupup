@@ -1,0 +1,11 @@
+{% extends 'accounts/base.html' %}
+{% block title %}Matches for {{ usergroup.name }}{% endblock %}
+
+{% block content %}
+<h1>Create a new group</h1>
+<form action="/groups/create/" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="OK">
+</form>
+{% endblock %}
