@@ -69,6 +69,11 @@ class GroupUpUser(models.Model):
 
         return self == group.group_admin
 
+    def is_member_of_group(self, group):
+        """Returns true if this user is a member of the given group."""
+
+        return self in group.members.all()
+
     def __str__(self):
         return self.user.username
 

@@ -1,4 +1,3 @@
-from random import choices
 from django import forms
 
 class HandleRequestForm(forms.Form):
@@ -6,4 +5,10 @@ class HandleRequestForm(forms.Form):
 
     CHOICES = [('confirmed', 'Accept'), ('rejected', 'Decline')]
     status = forms.ChoiceField(choices=CHOICES, widget=forms.RadioSelect)
+
+
+class InviteUserForm(forms.Form):
+    """Form for inviting a user"""
+
+    username = forms.CharField(max_length=30, label="Username")
     
