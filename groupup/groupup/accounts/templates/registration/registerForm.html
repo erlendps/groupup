@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>MyDjangoApp</title>
+    <meta charset="utf-8">
+</head>
+
+<body>
+    <h2>Sign up</h2>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Submit</button>
+    </form>
+    {{ form.username.errors }}
+    {{ form.password.errors }}
+    {{ form.profile_pic.errors }}
+    {{ form.interests.errors }}
+    {{ form.birthday.errors }}
+</body>
+</html>
