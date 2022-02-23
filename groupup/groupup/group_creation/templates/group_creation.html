@@ -1,15 +1,5 @@
 <form action="/groups/create-group" method="post" enctype="multipart/form-data">
     {% csrf_token %}
-    <label for="group_name">Group name: </label>
-    <input id="group_name" type="text" name="group_name">
-    <label for="group_description">Group description: </label>
-    <input id="group_description" type="text" name="group_description">
-    <select id="group_interests" name="group_interests">
-        <option disabled selected>Select a group interest</option>
-        <option value="football">Football</option>
-        <option value="skiing">Skiing</option>
-    </select>
-    <label for="group_picture">Group picture: </label>
-    <input id="group_picture" type="file" name="group_picture">
+    {{ form }}
     <input type="submit" value="OK">
 </form>
