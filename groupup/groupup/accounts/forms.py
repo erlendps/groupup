@@ -32,6 +32,7 @@ class GroupCreateForm(forms.ModelForm):
         """
         self.instance.group_admin = owner
         returnValue = super().save(commit=True)
+        self.instance.members.add(owner)
         for interest in self.cleaned_data['interests']:
             self.instance.interests.add(interest.id)
         return returnValue
