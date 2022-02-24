@@ -80,22 +80,21 @@ def handle_match_request(request, pk):
     Creates a HandleRequestForm, and renders it. If the input is valid,
     the status will be set according to the POST-request.
     """
-    print(request)
-    # if 'pp_viewmatches' in request.session:
-    #     requesting_group = UserGroup.objects.get(pk=pk)
-    #     receiving_group = UserGroup.objects.get(pk=request.session.get('group_pk'))
-    #     if not request.user.groupupuser.is_admin_of(receiving_group):
-    #         del request.session['pp_viewmatches']
-    #         raise Http404
-    #     if request.method == 'POST':
-    #         form = HandleRequestForm(request.POST)
-    #         if form.is_valid():
-    #             status = form.cleaned_data['status']
-    #             match = Matches.objects.get(requestor=requesting_group, receiver=receiving_group)
-    #             match.status = status
-    #             match.save()
-    #             return HttpResponseRedirect('/admin/viewmatchrequests/{0}'.format(receiving_group.id))
-    #     else:
-    #         form = HandleRequestForm()
-    #     context = {'group': requesting_group, 'form': form}
-    #     return render(request, 'group_matching/group_site_handle_request.html', context)
+    if 'pp_viewmatches' in request.session:
+        requesting_group = UserGroup.objects.get(pk=pk)
+        receiving_group = UserGroup.objects.get(pk=request.session.get('group_pk'))
+        if not request.user.groupupuser.is_admin_of(receiving_group):
+            del request.session['pp_viewmatches']
+            raise Http404
+        if request.method == 'POST':
+            form = HandleRequestForm(request.POST)
+            if form.is_valid():
+                status = form.cleaned_data['status']
+                match = Matches.objects.get(requestor=requesting_group, receiver=receiving_group)
+                match.status = status
+                match.save()
+                return HttpResponseRedirect('/admin/viewmatchrequests/{0}'.format(receiving_group.id))
+        else:
+            form = HandleRequestForm()
+        context = {'group': requesting_group, 'form': form}
+        return render(request, 'group_matching/group_site_handle_request.html', context)
