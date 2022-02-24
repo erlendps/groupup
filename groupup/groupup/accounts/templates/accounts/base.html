@@ -37,13 +37,13 @@
               <li class="nav-item">
                 <a class="nav-link active" aria-current="page" href="#" style="color: black;">Profile</a>
               </li>
+              <li>
+                <a class="btn btn-danger" href="{% url 'logout' %}">Logout</a>
+              </li>
             </ul>
           </div>
         </div>
       </div>
-        <!--
-          <a class="btn btn-danger" href="{% url 'logout' %}">Logout</a> 
-        -->
     </nav>
     {% block content %}
     {% endblock %}
@@ -51,6 +51,7 @@
       {% block login %}
       <p>You are not logged in</p>
       <a href="{% url 'login' %}">Log In</a>
+      <a href="{% url 'register' %}">Register New User</a>
       {% endblock %}
     {% endif %}
   </body>

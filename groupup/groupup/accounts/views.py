@@ -37,7 +37,7 @@ def register(request):
             groupupuser.save()
             print(data.get("interests"))
 
-            return HttpResponseRedirect('/home')
+            return HttpResponseRedirect('')
 
     else:
         form = RegisterForm()
