@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'groupup.accounts',
-    'groupup.group_matching',
+    'groupup.groupup_admin',
     'bootstrap5',
 ]
 

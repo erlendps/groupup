@@ -1,7 +1,0 @@
-.filter-green {
-  filter: invert(39%) sepia(19%) saturate(1210%) hue-rotate(68deg) brightness(98%) contrast(92%);
-}
-
-.filter-red {
-  filter: invert(8%) sepia(100%) saturate(7497%) hue-rotate(8deg) brightness(94%) contrast(111%);
-}

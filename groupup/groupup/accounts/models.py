@@ -1,11 +1,9 @@
-from pyexpat import model
-from tokenize import blank_re
-from urllib import request
 from django.db import models
 from django.contrib.auth.models import User
 import datetime
 from dateutil.relativedelta import relativedelta
-from groupup.group_matching.models import Matches
+from django.dispatch import receiver
+from groupup.groupup_admin.models import Invite, Matches
 
 
 
@@ -74,6 +72,18 @@ class GroupUpUser(models.Model):
 
         return self in group.members.all()
 
+    def get_pending_invitations(self):
+        """Returns a list of pending group invitations."""
+        
+        return list(self.receiver.filter(status="pending"))
+
+    def has_pending_invite(self, group):
+        """Returns true if user has a pending invite with the given group."""
+
+        if Invite.objects.filter(receiver=self, group=group, status="pending"):
+            return True
+        return False
+
     def __str__(self):
         return self.user.username
 
@@ -107,6 +117,12 @@ class UserGroup(models.Model):
         permissions = (
             ("group_admin", "Create and respond to group matches"), # probably can be removed
         )
+
+
+    def get_members(self):
+        """Returns a list of members of the group."""
+
+        return list(self.members.all())
 
     def get_age_gap(self):
         """Returns the age gap in a group, represented as a string."""

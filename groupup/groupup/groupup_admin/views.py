@@ -1,8 +1,10 @@
+from email import message
+from django.dispatch import receiver
 from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from groupup.accounts.models import GroupUpUser, UserGroup
-from groupup.group_matching.models import Matches
+from .models import Matches, Invite
 from .forms import HandleRequestForm, InviteUserForm
 from django.contrib.auth.models import User
 from django.contrib import messages
@@ -30,8 +32,13 @@ def group_browsing(request, pk):
                 user = GroupUpUser.objects.get(user=User.objects.get(username=form.cleaned_data.get("username")))
                 if user.is_member_of_group(group):
                     messages.warning(request, "User already a member")
+                elif user.has_pending_invite(group):
+                    messages.warning(request, "Already invited user")
                 else:
+                    invite = Invite.objects.create(group=group, receiver=user)
+                    invite.save()
                     messages.success(request, "Successfully invited the user!")
+
             except:
                 messages.warning(request, "User does not exist.")
             form = InviteUserForm()
@@ -43,7 +50,7 @@ def group_browsing(request, pk):
         "group": group,
         "form": form,
     }
-    return render(request, "group_matching/group_site_admin.html", context)
+    return render(request, "groupup_admin/group_site_admin.html", context)
 
 
 @login_required
@@ -85,7 +92,7 @@ def send_match_request(request, pk):
 @login_required
 def view_match_requests(request, pk):
     """Returns a view with a list of all groups that has requested a match with the group with primary_key=pk."""
-    
+
     if not request.user.groupupuser.is_a_group_admin():
         return redirect("/groups/{0}".format(pk))
     group = UserGroup.objects.get(pk=pk)
@@ -102,7 +109,7 @@ def view_match_requests(request, pk):
         if match.status == 'pending':
             requesting_groups.append(match.requestor)
     context = {'requesting_groups': requesting_groups, 'groupname': group.name}
-    return render(request, 'group_matching/match_requests.html', context)
+    return render(request, 'groupup_admin/match_requests.html', context)
 
 @login_required
 def handle_match_request(request, pk):
@@ -130,4 +137,4 @@ def handle_match_request(request, pk):
         else:
             form = HandleRequestForm()
         context = {'group': requesting_group, 'form': form}
-        return render(request, 'group_matching/group_site_handle_request.html', context)
+        return render(request, 'groupup_admin/group_site_handle_request.html', context)
