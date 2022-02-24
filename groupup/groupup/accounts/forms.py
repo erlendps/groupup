@@ -18,7 +18,10 @@ class RegisterForm(forms.Form):
 
 class GroupCreateForm(forms.ModelForm):
     """A form for creating new groups."""
-
+    interests = forms.ModelMultipleChoiceField(
+                                    label="Interests",
+                                    queryset=Interest.objects.all(),
+                                    widget=forms.CheckboxSelectMultiple)
     class Meta:
         model = UserGroup
         fields = ["name", "description", "group_pic"]
@@ -28,4 +31,7 @@ class GroupCreateForm(forms.ModelForm):
         Creates a new instance of GroupUpUser and saves the result.
         """
         self.instance.group_admin = owner
+        for interest in self.cleaned_data['interests']:
+            self.instance.interests.add(interest.id)
+        print(self.cleaned_data['interests'])
         return super().save(commit=True)
