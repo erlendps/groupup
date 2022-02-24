@@ -12,6 +12,12 @@
 
     {# Display django.contrib.messages as Bootstrap alerts #}
     {% bootstrap_messages %}
+    
+    {% load static %}
+
+    <title>{% block title %}{% endblock%}</title>
+
+    <link rel="stylesheet" type="text/css" href="{% static 'groupup/css/filters.css' %}">
   </head>
   <body>
     {% if user.is_authenticated %}

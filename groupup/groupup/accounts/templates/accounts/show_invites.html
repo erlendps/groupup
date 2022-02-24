@@ -1,0 +1,39 @@
+{% extends 'accounts/base.html' %}
+{% load static %}
+
+{% block title %}Pending Invites{% endblock %}
+
+{% block content %}
+  <div class="container">
+      <h1 style="text-align: center">Group Invites</h1>
+
+        
+      <ul class="list-unstyled">
+      {% for invitation in pending_invites %}
+        <div class="row mb-5">
+          <div class="col-md-1 col-xl-1"></div>
+          <div class="col-md-10 col-xl-10">
+            <li style="font-size: 25px;">
+              <div class="row">
+                <div class="col-md-10 col-xl-10">
+                    <a href="/groups/{{ invitation.group.id }}" target="_blank">{{ invitation.group.name }}</a>
+                    has invited you to their group!
+                </div>
+                <div class="col-md-2 col-xl-2 align-self-center">
+                  <a class="text-decoration-none" href="/profile/acceptinvite/{{ invitation.group.id }}">
+                    <img class="filter-green" src="{% static 'groupup/img/check-circle.svg' %}" width="30px">
+                  </a>
+                  <a class="text-decoration-none" href="/profile/declineinvite/{{ invitation.group.id }}">
+                    <img class="filter-red" src="{% static 'groupup/img/x-circle.svg' %}" width="30px">
+                  </a>
+                
+                </div>
+              </div>
+            </li>
+          </div>
+          <div class="col-md-1 col-xl-1"></div>
+        </div>
+      {% endfor %}
+      </ul>
+  </div>
+{% endblock %}
