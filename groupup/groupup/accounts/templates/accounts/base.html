@@ -59,18 +59,13 @@
         </div>
       </nav>
       <div style= "display: flex; justify-content: center; padding-top: 40px;">
-     
         <div style="display: flex; flex-direction: column;">
           <h3>You are not logged in</h3>
           <div style= "margin-top: 40px; display: flex; flex-direction: column; align-items: center;">
-
             <a class="btn btn-success" style="padding-left: 20px; padding-right: 20px;" href="{% url 'login' %}">Log In</a>
-          <a style= "margin-top: 10px;" class= "btn btn-link" href="{% url 'register' %}">Register New User</a>
+            <a style= "margin-top: 10px;" class= "btn btn-link" href="{% url 'register' %}">Register New User</a>
           </div>
         </div>
-
-        
-      
       </div>
       
       {% endblock %}
