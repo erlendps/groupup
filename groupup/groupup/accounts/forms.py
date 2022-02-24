@@ -31,7 +31,7 @@ class GroupCreateForm(forms.ModelForm):
         Creates a new instance of GroupUpUser and saves the result.
         """
         self.instance.group_admin = owner
+        returnValue = super().save(commit=True)
         for interest in self.cleaned_data['interests']:
             self.instance.interests.add(interest.id)
-        print(self.cleaned_data['interests'])
-        return super().save(commit=True)
+        return returnValue
