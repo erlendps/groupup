@@ -1,6 +1,6 @@
 from django.dispatch import receiver
 from django.shortcuts import render
-from django.http import Http404, HttpResponseRedirect
+from django.http import Http404, HttpResponse, HttpResponseRedirect
 from .models import UserGroup
 from django.contrib.auth.decorators import login_required
 from django.forms import ValidationError
@@ -37,13 +37,17 @@ def register(request):
             for interest in list(data.get("interests")):
                 groupupuser.interests.add(interest.id)
             groupupuser.save()
-            print(data.get("interests"))
 
-            return HttpResponseRedirect('')
+            return HttpResponseRedirect('/')
 
     else:
         form = RegisterForm()
     return render(request, 'registration/registerForm.html', {'form': form})
+
+
+@login_required
+def all_groups(request):
+    return HttpResponse("yup")
 
 @login_required
 def group_site(request, pk):

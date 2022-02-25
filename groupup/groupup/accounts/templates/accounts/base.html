@@ -26,7 +26,14 @@
         <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
           <span class="navbar-toggler-icon"> </span>
         </button>
-        <a class="navbar-brand" style="margin-left: 0.3cm;" href="#">GroupUp</a>
+        <a class="navbar-brand" style="margin-left: 0.3cm;" href="/">GroupUp</a>
+        <ul class="navbar-nav" style="margin-left: auto">
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'accounts:invites' %}">Profile</a>
+          </li>
+        </ul>
+
+
         <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
           <div class="offcanvas-header">
             <h5 class="offcanvas-title" id="offcanvasNavbarLabel">GroupUp</h5>
@@ -35,13 +42,13 @@
           <div class="offcanvas-body">
             <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
               <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="#" style="color: black;">Home</a>
+                <a class="nav-link active" aria-current="page" href="/" style="color: black;">Home</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="#" style="color: black;">Groups</a>
+                <a class="nav-link active" aria-current="page" href="{% url 'accounts:groups' %}" style="color: black;">Groups</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="#" style="color: black;">Profile</a>
+                <a class="nav-link active" aria-current="page" href="{% url 'accounts:invites' %}" style="color: black;">Profile</a>
               </li>
               <li>
                 <a class="btn btn-danger" href="{% url 'logout' %}">Logout</a>
@@ -69,7 +76,7 @@
           <h3>You are not logged in</h3>
           <div style= "margin-top: 40px; display: flex; flex-direction: column; align-items: center;">
             <a class="btn btn-success" style="padding-left: 20px; padding-right: 20px;" href="{% url 'login' %}">Log In</a>
-            <a style= "margin-top: 10px;" class= "btn btn-link" href="{% url 'register' %}">Register New User</a>
+            <a style= "margin-top: 10px;" class= "btn btn-link" href="{% url 'accounts:register' %}">Register New User</a>
           </div>
         </div>
       </div>
