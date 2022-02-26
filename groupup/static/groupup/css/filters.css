@@ -1,0 +1,15 @@
+.filter-green {
+  filter: invert(39%) sepia(19%) saturate(1210%) hue-rotate(68deg) brightness(98%) contrast(92%);
+}
+
+.filter-green:hover {
+  filter: invert(26%) sepia(6%) saturate(3615%) hue-rotate(68deg) brightness(102%) contrast(94%);
+}
+
+.filter-red {
+  filter: invert(8%) sepia(100%) saturate(7497%) hue-rotate(8deg) brightness(94%) contrast(111%);
+}
+
+.filter-red:hover {
+  filter: invert(10%) sepia(92%) saturate(5728%) hue-rotate(7deg) brightness(86%) contrast(116%);
+}

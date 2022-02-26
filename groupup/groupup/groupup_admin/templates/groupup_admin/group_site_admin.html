@@ -1,10 +1,22 @@
 {% extends 'accounts/group_site.html' %}
+{% load bootstrap5 %}
 
 {% block title %}Group Site for {{ group.name }}{% endblock %}
 
 {% block admin_content %}
 {% if group in user.groupupuser.get_groups_where_admin %}
   <a class="btn" href="#">Edit group</a>
+  <h2>Invite users</h2>
+  <form action="{{ group.id }}" method="post">
+    {% csrf_token %}
+    {% bootstrap_form form %}
+    {% buttons %}
+      <button type="submit" class="btn btn-primary">
+        Invite!
+      </button>
+    {% endbuttons %}
+  </form>
+
 {% else %}
   <p>You are administrator of these groups:</p>
   <ul>
