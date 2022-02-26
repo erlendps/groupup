@@ -1,0 +1,17 @@
+<select name="{{ widget.name }}" class="form-select" multiple{% include "django/forms/widgets/attrs.html" %}>{% for group_name, group_choices, group_index in widget.optgroups %}{% if group_name %}
+    <optgroup label="{{ group_name }}">{% endif %}{% for option in group_choices %}
+    {% include option.template_name with widget=option %}{% endfor %}{% if group_name %}
+    </optgroup>{% endif %}{% endfor %}
+</select>
+<div class="form-select-flyout">
+    <div class="selected-items"></div>
+    <div class="form-select-container" id="interest-select-container">
+        <input type="text" class="form-input" id="interest-select-filter">
+        <div class="form-select-items" id="interest-select-items"></div>
+    </div>
+    <div class="form-select-dismiss-overlay"></div>
+</div>
+<script type="text/javascript">
+    createInterestsWidget("{{ widget.attrs.id }}")
+</script>
+{{ form.interests.errors }}

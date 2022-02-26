@@ -18,7 +18,11 @@
     <title>{% block title %}{% endblock%}</title>
 
     <link rel="stylesheet" type="text/css" href="{% static 'groupup/css/filters.css' %}">
-  </head>
+
+    {# Interests widget #}
+    <link rel="stylesheet" type="text/css" href="{% static 'groupup/css/interests_widget.css' %}">
+    <script src='{% static "groupup/js/interests_widget.js" %}'></script>
+</head>
   <body>
     {% if user.is_authenticated %}
     <nav class="navbar sticky-top navbar-dark bg-dark">

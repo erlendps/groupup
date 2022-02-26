@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-
+    
     <head>
         <title>Register User</title>
         <meta charset="utf-8">
@@ -14,6 +14,12 @@
 
         {# Display django.contrib.messages as Bootstrap alerts #}
         {% bootstrap_messages %}
+        
+        {% load static %}
+
+        {# Interests widget #}
+        <link rel="stylesheet" type="text/css" href="{% static 'groupup/css/interests_widget.css' %}">
+        <script src='{% static "groupup/js/interests_widget.js" %}'></script>
     </head>
 
     <body>

@@ -3,6 +3,8 @@ from groupup.accounts.models import UserGroup, GroupUpUser
 from .models import Interest
 from .widgets import DatePickerInput
 
+class InterestsWidget(forms.SelectMultiple):
+    template_name="widgets/interests_widget.html"
 
 class RegisterForm(forms.Form):
     """Form for creating a new groupupuser"""
@@ -13,7 +15,7 @@ class RegisterForm(forms.Form):
     interests = forms.ModelMultipleChoiceField(
                                     label="interests",
                                     queryset=Interest.objects.all(),
-                                    widget=forms.CheckboxSelectMultiple)
+                                    widget=InterestsWidget)
     birthday = forms.DateField(label="dateofbirth", widget=DatePickerInput)
 
 class GroupCreateForm(forms.ModelForm):
@@ -21,7 +23,7 @@ class GroupCreateForm(forms.ModelForm):
     interests = forms.ModelMultipleChoiceField(
                                     label="Interests",
                                     queryset=Interest.objects.all(),
-                                    widget=forms.CheckboxSelectMultiple)
+                                    widget=InterestsWidget)
     class Meta:
         model = UserGroup
         fields = ["name", "description", "group_pic"]
