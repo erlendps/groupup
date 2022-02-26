@@ -18,18 +18,22 @@
     <title>{% block title %}{% endblock%}</title>
 
     <link rel="stylesheet" type="text/css" href="{% static 'groupup/css/filters.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'groupup/css/profile.css' %}">
+    <link rel="shortcut icon" href="{% static 'groupup/img/favicon.ico' %}"
   </head>
   <body>
     {% if user.is_authenticated %}
     <nav class="navbar sticky-top navbar-dark bg-dark">
-      <div class="container" style="margin-left: 0cm; justify-content: left;" >
+      <div class="container" style="margin-left: 1.5cm; justify-content: left;" >
         <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
           <span class="navbar-toggler-icon"> </span>
         </button>
         <a class="navbar-brand" style="margin-left: 0.3cm;" href="/">GroupUp</a>
         <ul class="navbar-nav" style="margin-left: auto">
           <li class="nav-item">
-            <a class="nav-link" href="{% url 'accounts:invites' %}">Profile</a>
+            <a class="nav-link" href="{% url 'accounts:invites' %}">
+              <img class="profile-pic" src="{{ MEDIA_URL }}{{ user.groupupuser.profile_pic.url }}">
+            </a>
           </li>
         </ul>
 
