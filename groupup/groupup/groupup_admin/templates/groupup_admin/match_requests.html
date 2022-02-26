@@ -8,7 +8,7 @@
 <ul>
   {% for group in requesting_groups %}
     <li>
-      <a href='/admin/handle_requests/{{ group.id }}'>{{ group.name }} has requested a match</a>
+      <a href="{% url 'group_admin:handle_request' group.id %}">{{ group.name }} has requested a match</a>
     </li>
   {% endfor %}
 </ul>
