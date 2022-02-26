@@ -21,4 +21,4 @@ tests/report/
 venv/
 db.sqlite3
 uploads/
-static/
+common-static/

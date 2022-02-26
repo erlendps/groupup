@@ -1,6 +1,8 @@
 from django.urls import path
 from . import views
 
+app_name = "group_admin"
+
 urlpatterns = [
     path('group/<int:pk>', views.group_browsing),
     path('sendmatchrequest/<int:pk>', views.send_match_request),

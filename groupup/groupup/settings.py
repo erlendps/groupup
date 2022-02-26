@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 import os
 
 from pathlib import Path
+from tokenize import group
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -39,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'groupup.accounts',
-    'groupup.group_matching',
+    'groupup.groupup_admin',
     'bootstrap5',
 ]
 
@@ -126,12 +127,24 @@ MEDIA_URL = 'media/'
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
+STATICFILES_DIRS = [
+    BASE_DIR / "static"
+]
+
+STATICFILES_FINDERS = [
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+]
+
+STATIC_ROOT = os.path.join(BASE_DIR, "common-static")
 
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
+
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
