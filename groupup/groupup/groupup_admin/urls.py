@@ -4,6 +4,7 @@ from . import views
 app_name = "group_admin"
 
 urlpatterns = [
+    path('', views.admin_index, name="admin_index"),
     path('groups/', views.all_groups, name='groups'),
     path('groups/<int:pk>', views.group_browsing, name='group_browsing'),
     path('sendmatchrequest/<int:pk>', views.send_match_request, name='send_match'),
