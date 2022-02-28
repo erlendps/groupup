@@ -18,5 +18,7 @@
     {% endfor %}
 </ul>
 
+<a href="{% url 'accounts:group_matches' group.id %}">See matches for {{ group.name }}!</a>
+
 {% block admin_content %}{% endblock %}
 {% endblock %}

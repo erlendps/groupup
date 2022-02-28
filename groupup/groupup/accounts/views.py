@@ -1,8 +1,7 @@
-from django.dispatch import receiver
 from django.shortcuts import render
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.edit import FormView
-from django.http import Http404, HttpResponse, HttpResponseRedirect
+from django.http import Http404, HttpResponseRedirect
 from .models import UserGroup
 from django.contrib.auth.decorators import login_required
 from django.forms import ValidationError
@@ -10,10 +9,19 @@ from .models import GroupUpUser, UserGroup
 from .forms import RegisterForm, GroupCreateForm
 from django.contrib.auth.models import User
 from groupup.groupup_admin.models import Invite
+from django.db.models.functions import Lower
 
 
 def homepage(request):
-    return render(request, "accounts/home.html")
+    """Renders the homepage for the user."""
+    
+    try:
+        groups = request.user.groupupuser.get_groups()
+        context = {"groups": groups}
+        return render(request, "accounts/home.html", context)
+
+    except AttributeError:
+        return render(request, "accounts/home.html")
 
 class UserGroupCreateView(LoginRequiredMixin, FormView):
     """View for creating new groups."""
@@ -61,7 +69,10 @@ def register(request):
 
 @login_required
 def all_groups(request):
-    return HttpResponse("yup")
+    """Renders a page with all groups."""
+    
+    groups = list(UserGroup.objects.all().order_by(Lower('name'), 'pk'))
+    return render(request, "accounts/all_groups.html", {"groups": groups})
 
 @login_required
 def group_site(request, pk):

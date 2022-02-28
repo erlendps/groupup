@@ -1,5 +1,3 @@
-from email import message
-from django.dispatch import receiver
 from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
@@ -8,6 +6,30 @@ from .models import Matches, Invite
 from .forms import HandleRequestForm, InviteUserForm
 from django.contrib.auth.models import User
 from django.contrib import messages
+from django.db.models.functions import Lower
+
+
+@login_required
+def admin_index(request):
+    """Renders a page with all the groups the user is admin of."""
+
+    if not request.user.groupupuser.is_a_group_admin():
+        raise Http404
+
+    groups = request.user.groupupuser.get_groups_where_admin()
+    context = {"groups": groups}
+    return render(request, "groupup_admin/admin_index.html", context)
+
+
+@login_required
+def all_groups(request):
+    """Renders a page with all groups."""
+
+    if not request.user.groupupuser.is_a_group_admin():
+        raise Http404
+
+    groups = list(UserGroup.objects.all().order_by(Lower('name'), 'pk'))
+    return render(request, "groupup_admin/all_groups.html", {"groups": groups})
 
 
 @login_required
@@ -85,7 +107,7 @@ def send_match_request(request, pk):
         # give feedback
         messages.success(request, "Sent a match request!")
         del request.session["pp_groupbrowsing"]
-        return redirect("/admin/group/{0}".format(receiver_group.id))
+        return redirect("/admin/groups/{0}".format(receiver_group.id))
     else:
         raise Http404
 

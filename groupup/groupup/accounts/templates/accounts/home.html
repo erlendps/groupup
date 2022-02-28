@@ -8,10 +8,14 @@
       <h2>Groups</h2>
     </div>
     <div id="groups" class="container" style="margin: 2em; width: fit-content;">
-      <ul style="list-style-type: none">
-        <li>Group 1</li>
-        <li>Group 2</li>
-        <li>Group 3</li>
+      <ul style="list-style-type: none; padding: 0;">
+        {% for group in groups %}
+        <li>
+          <a class="text-decoration-none" style="color: inherit;" href="{% url 'accounts:group_site' group.id %}">
+            {{ group.name }}
+          </a>
+        </li>
+        {% endfor %}
       </ul>
     </div>
   </div>
