@@ -1,5 +1,4 @@
 {% extends 'accounts/base.html' %}
-<<<<<<< HEAD
 {% block content %}
     <div style=" margin-top: 40px; display: flex; flex-direction: column; align-items: center;">
         <h2 style="margin-bottom: 30px;">Create Group</h2>
@@ -15,19 +14,4 @@
         {{ form.interests.errors }}
         </div>
     </div>
-=======
-{% load static %}
-{% block title %}Matches for {{ usergroup.name }}{% endblock %}
-
-{% block content %}
-<h1>Create a new group</h1>
-
-
-<form action="/groups/create/" method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="OK">
-</form>
-
->>>>>>> b837bdabf368c1e39c04f697724aaef2105d7890
 {% endblock %}
