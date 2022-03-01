@@ -1,23 +1,53 @@
 {% extends 'accounts/base.html' %}
 
-{% block title %}Group Site for {{ group.name }}{% endblock %}
-
 {% block content %}
-<h1>{{ group.name }}</h1>
-<ul>
-    {% for interest in group.interests.all %}
-        <li>{{ interest.name }}</li>
-    {% endfor %}
-</ul>
-<p>{{ group.get_age_gap }}</p>
-<img src="{{ MEDIA_URL }}{{ group.group_pic.url }}">
-<p>{{ group.description }}</p>
-<ul>
-    {% for member in group.members.all %}
-        <li>{{ member.user.username }}</li>
-    {% endfor %}
-</ul>
+<style>
+    #sidepanel{
+        background-color: #006A6E;
+        width: 500px;
+        height: 500px;
+        border-radius: 25px;
+    }
+    div.scroll{
+        height: 380px;
+        overflow-x: hidden;
+        overflow-y: auto;
+        text-align: left;
+    }
 
+</style>
+<div id="main" class="box" style="display: flex; flex-direction: row;">
+    <div id="info" class="container" style="margin: 2em; width: fit-content;">
+        <img src="{{ MEDIA_URL }}{{ group.group_pic.url }}" style="width: 1000px; height: 200px; object-fit: cover;">
+        <h1>{{ group.name }}</h1>
+        <p>{{ group.description }}</p>
+        <h5>Interests</h5>
+        <ul style="list-style-type:none;"><div>
+                {% for interest in group.interests.all %}
+                    <li>{{ interest.name }}</li>
+                {% endfor %}
+            </div>
+        </ul>
+    </div>
+    <div id=sidepanel id="members" class="container" style="margin: 2em; color: white">
+        <div style="margin: 1em; width: fit-content;">
+            <p>Age-gap: {{ group.get_age_gap }}</p>
+            <h5>Group members</h3>
+        </div>
+        <div style="margin: 1em; width: fit-content;">
+            <div>
+                
+            </div>
+            <div class=scroll style="margin: 1em; width: 200px;">
+                <ul>
+                    {% for member in group.members.all %}
+                        <li>{{ member.user.username }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
 <a href="{% url 'accounts:group_matches' group.id %}">See matches for {{ group.name }}!</a>
 
 {% block admin_content %}{% endblock %}
