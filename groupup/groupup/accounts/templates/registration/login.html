@@ -5,7 +5,7 @@
 {% block login %}
 <nav class="navbar sticky-top navbar-dark bg-dark">
   <div>
-    <a class="navbar-brand" style="margin-left: 1.3cm;" href="#">GroupUp</a>
+    <a class="navbar-brand" style="margin-left: 1.3cm;" href="/">GroupUp</a>
   </div>
 </nav>
 <div style="margin-top: 40px; display: flex; flex-direction: column; align-items: center;">
@@ -17,7 +17,7 @@
   </form>
   <div style="display:flex; flex-direction: row; margin: 30px;">
     <p style="margin-right: 5px;">Don't have an account?</p> 
-    <a href="{% url 'register' %}">Sign up here!</a>
+    <a href="{% url 'accounts:register' %}">Sign up here!</a>
   </div>
 </div>
 

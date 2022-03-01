@@ -18,15 +18,26 @@
     <title>{% block title %}{% endblock%}</title>
 
     <link rel="stylesheet" type="text/css" href="{% static 'groupup/css/filters.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'groupup/css/styles.css' %}">
+    <link rel="shortcut icon" href="{% static 'groupup/img/favicon.ico' %}">
   </head>
-  <body>
+  <body class="d-flex flex-column min-vh-100">
     {% if user.is_authenticated %}
     <nav class="navbar sticky-top navbar-dark bg-dark">
       <div class="container" style="margin-left: 0cm; justify-content: left;" >
         <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
           <span class="navbar-toggler-icon"> </span>
         </button>
-        <a class="navbar-brand" style="margin-left: 0.3cm;" href="#">GroupUp</a>
+        <a class="navbar-brand" style="margin-left: 0.3cm;" href="/">GroupUp</a>
+        <ul class="navbar-nav" style="margin-left: auto">
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'accounts:invites' %}">
+              <img class="profile-pic" src="{{ MEDIA_URL }}{{ user.groupupuser.profile_pic.url }}">
+            </a>
+          </li>
+        </ul>
+
+
         <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
           <div class="offcanvas-header">
             <h5 class="offcanvas-title" id="offcanvasNavbarLabel">GroupUp</h5>
@@ -35,14 +46,19 @@
           <div class="offcanvas-body">
             <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
               <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="#" style="color: black;">Home</a>
+                <a class="nav-link active" aria-current="page" href="/" style="color: black;">Home</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="#" style="color: black;">Groups</a>
+                <a class="nav-link active" aria-current="page" href="{% url 'accounts:groups' %}" style="color: black;">Groups</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="#" style="color: black;">Profile</a>
+                <a class="nav-link active" aria-current="page" href="{% url 'accounts:invites' %}" style="color: black;">Profile</a>
               </li>
+              {% if user.groupupuser.is_a_group_admin %}
+                <li class="nav-item">
+                  <a class="nav-link active" aria-current="page" href="{% url 'group_admin:admin_index' %}" style="color: black;">Admin</a>
+                </li>
+              {% endif %}
               <li>
                 <a class="btn btn-danger" href="{% url 'logout' %}">Logout</a>
               </li>
@@ -61,7 +77,7 @@
       </div>
       <nav class="navbar sticky-top navbar-dark bg-dark">
         <div>
-          <a class="navbar-brand" style="margin-left: 1.3cm;" href="#">GroupUp</a>
+          <a class="navbar-brand" style="margin-left: 1.3cm;" href="/">GroupUp</a>
         </div>
       </nav>
       <div style= "display: flex; justify-content: center; padding-top: 40px;">
@@ -69,7 +85,7 @@
           <h3>You are not logged in</h3>
           <div style= "margin-top: 40px; display: flex; flex-direction: column; align-items: center;">
             <a class="btn btn-success" style="padding-left: 20px; padding-right: 20px;" href="{% url 'login' %}">Log In</a>
-            <a style= "margin-top: 10px;" class= "btn btn-link" href="{% url 'register' %}">Register New User</a>
+            <a style= "margin-top: 10px;" class= "btn btn-link" href="{% url 'accounts:register' %}">Register New User</a>
           </div>
         </div>
       </div>
@@ -78,5 +94,21 @@
       {% block register %}
       {% endblock %}
     {% endif %}
+    <footer class="bg-light text-center mt-auto">
+      <div class="container p-4">
+        <div class="row">
+          <div class="col-md-1 col-xl-1"></div>
+          <div class="col-md-10 col-xl-10">
+            <h5 class="text-uppercase">About</h5>
+            <p>
+              This is our project in the course TDT4140 "Programvareutvikling". The project uses the django framework
+              with bootstrap as our frontend framework. All source code is on the groups
+              <a href="https://gitlab.stud.idi.ntnu.no/tdt4140-2022/landsby-2/gruppe_32/groupup">gitlab.</a>
+            </p>
+          </div>
+          <div class="col-md-1 col-xl-1"></div>
+        </div>
+      </div>
+    </footer>
   </body>
 </html>

@@ -1,7 +1,5 @@
 {% extends 'accounts/base.html' %}
 
-{% block title %}Group Site for {{ group.name }}{% endblock %}
-
 {% block content %}
 <style>
     #sidepanel{
@@ -50,5 +48,7 @@
         </div>
     </div>
 </div>
+<a href="{% url 'accounts:group_matches' group.id %}">See matches for {{ group.name }}!</a>
+
 {% block admin_content %}{% endblock %}
 {% endblock %}

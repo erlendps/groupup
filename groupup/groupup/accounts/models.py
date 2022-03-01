@@ -2,7 +2,6 @@ from django.db import models
 from django.contrib.auth.models import User
 import datetime
 from dateutil.relativedelta import relativedelta
-from django.dispatch import receiver
 from groupup.groupup_admin.models import Invite, Matches
 
 
@@ -51,7 +50,7 @@ class GroupUpUser(models.Model):
     def get_groups(self):
         """Returns a list of all groups the user is connected to."""
 
-        return list(self.usergroup_set.all())
+        return list(self.usergroup_set.all().order_by('name', 'pk'))
     
     def get_groups_where_admin(self):
         """Returns a list of all groups where the user is admin."""
@@ -106,7 +105,6 @@ class UserGroup(models.Model):
 
     name = models.CharField(max_length=30)
     description = models.CharField(max_length=250)
-    num_of_members = models.IntegerField(default=1)
     interests = models.ManyToManyField(Interest, blank=True)
     group_pic = models.ImageField(upload_to=group_image_path, blank=True)
     members = models.ManyToManyField(GroupUpUser)
@@ -124,6 +122,11 @@ class UserGroup(models.Model):
 
         return list(self.members.all())
 
+    def num_of_memers(self):
+        """Returns the number of members in this group."""
+
+        return len(self.members.all())
+
     def get_age_gap(self):
         """Returns the age gap in a group, represented as a string."""
 
@@ -135,7 +138,16 @@ class UserGroup(models.Model):
                 youngest = member.birthday
             if member.birthday < oldest:
                 oldest = member.birthday
-        return "{0}-{1}".format(abs(relativedelta(youngest, today).years), abs(relativedelta(oldest, today).years))
+
+        if youngest == oldest:
+            return "Everyone is {0} years old".format(abs(relativedelta(youngest, today).years))
+
+        return "Ages from {0} to {1}".format(abs(relativedelta(youngest, today).years), abs(relativedelta(oldest, today).years))
+
+    def get_three_interests(self):
+        """Returns a list of 3 interests."""
+
+        return list(self.interests.all().order_by('name', 'pk')[:3])
 
     def get_matches(self, is_receiver):
         """Returns a list of matches where either the group is the receiver or requestor of a match request."""

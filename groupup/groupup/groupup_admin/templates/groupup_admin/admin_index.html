@@ -1,0 +1,51 @@
+{% extends 'accounts/base.html' %}
+
+{% block title %}Admin site{% endblock %}
+
+{% block content %}
+<div class="container mb-4">
+  <div class="row">
+    <div class="col-md-1 col-xl-1"></div>
+    <div class="col-md-10 col-xl-10">
+      <h1 style="text-align: center; margin-top: 10px;">Admin site</h1>
+      <h2 style="text-align: center; margin-top: 10px;">Your groups</h2>
+      <div class="d-flex flex-wrap justify-content-between" style="gap: 10px;">
+      {% for group in groups %}
+        <div class="group-item">
+          <a class="text-decoration-none" style="color: inherit;" href="{% block group_links %}{% url 'group_admin:group_browsing' group.id %}{% endblock %}">
+          <img class="group-pic-list" src="{{ MEDIA_URL }}{{ group.group_pic.url }}" alt="Group picture for {{ group.name }}">
+          <h2>{{ group.name }}</h2>
+          <p>{{ group.get_age_gap }}</p>
+          <h3>Some Interests</h3>
+          <ul class="list-group list-group-horizontal" style="background-color: lightgrey;">
+            {% for interest in group.get_three_interests %}
+            <li class="list-group-item flex-fill">{{ interest.name }}</li>
+            {% endfor %}
+          </ul>
+          </a>
+        </div>
+      {% endfor %}
+      </div>
+      <h3 style="text-align: center;">Group Browsing</h3>
+      <p style="text-align: center;">Find other groups and potential matches <a href="{% url 'group_admin:groups' %}">here</a>!
+    </div>
+    <div class="col-md-1 col-xl-1"></div>
+  </div>
+  <div class="row">
+    <div class="col-md-1 col-xl-1"></div>
+    <div class="col-md-10 col-xl-10">
+      <h2 style="text-align: center; margin-top: 10px;">Match requests</h2>
+      <ul class="d-flex justify-content-center" style="list-style-type: none; padding: 0;">
+        {% for group in groups %}
+        <li>
+          <a class="text-decoration-none" href="{% url 'group_admin:view_match' group.id %}">
+            Match requests for {{ group.name }}
+          </a>
+        </li> 
+        {% endfor %}
+      </ul>
+    </div>
+    <div class="col-md-1 col-xl-1"></div>
+  </div>
+</div>
+{% endblock %}
