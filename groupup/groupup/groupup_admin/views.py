@@ -154,7 +154,10 @@ def handle_match_request(request, pk):
                 match = Matches.objects.get(requestor=requesting_group, receiver=receiving_group)
                 match.status = status
                 match.save()
-                messages.success(request, "You have matched with {0}".format(requesting_group.name))
+                if status == "confirmed":
+                    messages.success(request, "You have matched with {0}".format(requesting_group.name))
+                else:
+                    messages.success(request, "You declined {0}'s match request".format(requesting_group.name))
                 return HttpResponseRedirect('/admin/viewmatchrequests/{0}'.format(receiving_group.id))
         else:
             form = HandleRequestForm()
