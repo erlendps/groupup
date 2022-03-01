@@ -1,22 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
+    
+    <head>
+        <title>Register User</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        {# Load the tag library #}
+        {% load bootstrap5 %}
 
-<head>
-    <title>MyDjangoApp</title>
-    <meta charset="utf-8">
-</head>
+        {# Load CSS and JavaScript #}
+        {% bootstrap_css %}
+        {% bootstrap_javascript %}
 
-<body>
-    <h2>Sign up</h2>
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Submit</button>
-    </form>
-    {{ form.username.errors }}
-    {{ form.password.errors }}
-    {{ form.profile_pic.errors }}
-    {{ form.interests.errors }}
-    {{ form.birthday.errors }}
-</body>
+        {# Display django.contrib.messages as Bootstrap alerts #}
+        {% bootstrap_messages %}
+        
+        {% load static %}
+
+        {# Interests widget #}
+        <link rel="stylesheet" type="text/css" href="{% static 'groupup/css/interests_widget.css' %}">
+        <script src='{% static "groupup/js/interests_widget.js" %}'></script>
+    </head>
+
+    <body>
+        <nav class="navbar sticky-top navbar-dark bg-dark">
+            <div>
+                <a class="navbar-brand" style="margin-left: 1.3cm;" href="/">GroupUp</a>
+            </div>
+        </nav>
+        <div style=" margin-top: 40px; display: flex; flex-direction: column; align-items: center;">
+            <h2 style="margin-bottom: 30px;">Sign up</h2>
+            <div>
+                <form method="post" enctype="multipart/form-data" style="display: flex; flex-direction: column;">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button class="btn btn-success" type="submit">Submit</button>
+            </form>
+            {{ form.username.errors }}
+            {{ form.password.errors }}
+            {{ form.profile_pic.errors }}
+            {{ form.interests.errors }}
+            {{ form.birthday.errors }}
+            </div>
+            
+        </div>
+    </body>
 </html>

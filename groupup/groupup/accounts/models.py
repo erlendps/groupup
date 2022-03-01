@@ -1,12 +1,9 @@
-from pyexpat import model
-from tokenize import blank_re
-from urllib import request
 from django.db import models
 from django.contrib.auth.models import User
 import datetime
 from dateutil.relativedelta import relativedelta
 from django.urls import reverse
-from groupup.group_matching.models import Matches
+from groupup.groupup_admin.models import Invite, Matches
 
 
 
@@ -54,7 +51,7 @@ class GroupUpUser(models.Model):
     def get_groups(self):
         """Returns a list of all groups the user is connected to."""
 
-        return list(self.usergroup_set.all())
+        return list(self.usergroup_set.all().order_by('name', 'pk'))
     
     def get_groups_where_admin(self):
         """Returns a list of all groups where the user is admin."""
@@ -69,6 +66,23 @@ class GroupUpUser(models.Model):
         """Returns true if the user is the group admin of the given group."""
 
         return self == group.group_admin
+
+    def is_member_of_group(self, group):
+        """Returns true if this user is a member of the given group."""
+
+        return self in group.members.all()
+
+    def get_pending_invitations(self):
+        """Returns a list of pending group invitations."""
+        
+        return list(self.receiver.filter(status="pending"))
+
+    def has_pending_invite(self, group):
+        """Returns true if user has a pending invite with the given group."""
+
+        if Invite.objects.filter(receiver=self, group=group, status="pending"):
+            return True
+        return False
 
     def __str__(self):
         return self.user.username
@@ -92,7 +106,6 @@ class UserGroup(models.Model):
 
     name = models.CharField(max_length=30)
     description = models.CharField(max_length=250)
-    num_of_members = models.IntegerField(default=1)
     interests = models.ManyToManyField(Interest, blank=True)
     group_pic = models.ImageField(upload_to=group_image_path, blank=True)
     members = models.ManyToManyField(GroupUpUser)
@@ -103,6 +116,17 @@ class UserGroup(models.Model):
         permissions = (
             ("group_admin", "Create and respond to group matches"), # probably can be removed
         )
+
+
+    def get_members(self):
+        """Returns a list of members of the group."""
+
+        return list(self.members.all())
+
+    def num_of_memers(self):
+        """Returns the number of members in this group."""
+
+        return len(self.members.all())
 
     def get_age_gap(self):
         """Returns the age gap in a group, represented as a string."""
@@ -115,7 +139,16 @@ class UserGroup(models.Model):
                 youngest = member.birthday
             if member.birthday < oldest:
                 oldest = member.birthday
-        return "{0}-{1}".format(abs(relativedelta(youngest, today).years), abs(relativedelta(oldest, today).years))
+
+        if youngest == oldest:
+            return "Everyone is {0} years old".format(abs(relativedelta(youngest, today).years))
+
+        return "Ages from {0} to {1}".format(abs(relativedelta(youngest, today).years), abs(relativedelta(oldest, today).years))
+
+    def get_three_interests(self):
+        """Returns a list of 3 interests."""
+
+        return list(self.interests.all().order_by('name', 'pk')[:3])
 
     def get_matches(self, is_receiver):
         """Returns a list of matches where either the group is the receiver or requestor of a match request."""
