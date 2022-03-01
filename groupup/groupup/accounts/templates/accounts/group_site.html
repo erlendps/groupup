@@ -28,7 +28,9 @@
                 {% endfor %}
             </div>
         </ul>
-        <a href="{% url 'accounts:group_matches' group.id %}">See matches for {{ group.name }}!</a>
+        {% if group in user.groupupuser.get_groups %}
+            <a href="{% url 'accounts:group_matches' group.id %}">See matches for {{ group.name }}!</a>
+        {% endif %}
     </div>
     <div id=sidepanel id="members" class="container" style="margin: 2em; color: white">
         <div style="margin: 1em; width: fit-content;">
