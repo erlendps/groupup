@@ -203,7 +203,7 @@ class UserGroup(models.Model):
         return len(received_matches+requested_matches) != 0
 
     def get_absolute_url(self):
-        return reverse('group_site', kwargs={'pk': self.pk})
+        return reverse('accounts:group_site', kwargs={'pk': self.pk})
         
     
     def __str__(self):
