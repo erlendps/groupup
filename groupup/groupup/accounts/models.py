@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 import datetime
 from dateutil.relativedelta import relativedelta
+from django.urls import reverse
 from groupup.groupup_admin.models import Invite, Matches
 
 
@@ -200,6 +201,9 @@ class UserGroup(models.Model):
         received_matches = list(Matches.objects.filter(receiver=self, requestor=group))
         requested_matches = list(Matches.objects.filter(receiver=group, requestor=self))
         return len(received_matches+requested_matches) != 0
+
+    def get_absolute_url(self):
+        return reverse('group_site', kwargs={'pk': self.pk})
         
     
     def __str__(self):

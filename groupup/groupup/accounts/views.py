@@ -1,10 +1,12 @@
 from django.shortcuts import render
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic.edit import FormView
 from django.http import Http404, HttpResponseRedirect
 from .models import UserGroup
 from django.contrib.auth.decorators import login_required
 from django.forms import ValidationError
 from .models import GroupUpUser, UserGroup
-from .forms import RegisterForm
+from .forms import RegisterForm, GroupCreateForm
 from django.contrib.auth.models import User
 from groupup.groupup_admin.models import Invite
 from django.db.models.functions import Lower
@@ -20,6 +22,18 @@ def homepage(request):
 
     except AttributeError:
         return render(request, "accounts/home.html")
+
+class UserGroupCreateView(LoginRequiredMixin, FormView):
+    """View for creating new groups."""
+
+    http_method_names = ['get', 'post']
+    form_class = GroupCreateForm
+    template_name = "accounts/group_creation.html"
+
+    def form_valid(self, form: GroupCreateForm):
+        obj = form.save(self.request.user.groupupuser)
+        self.success_url = obj.get_absolute_url()
+        return super().form_valid(form)
 
 def register(request):
     """View for handling new groupupusers
