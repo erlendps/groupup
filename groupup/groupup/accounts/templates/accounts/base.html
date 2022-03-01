@@ -33,14 +33,17 @@
           <span class="navbar-toggler-icon"> </span>
         </button>
         <a class="navbar-brand" style="margin-left: 0.3cm;" href="/">GroupUp</a>
-        <ul class="navbar-nav" style="margin-left: auto">
-          <li class="nav-item">
+        <ul class="navbar-nav" style="margin-left: auto; display: flex; flex-direction: row; gap: 10px;">
+          <li style="align-self: center;">
+            <a class="btn btn-success" href="{% url 'accounts:group_create' %}">+ Group</a>
+          </li>
+          <li>
             <a class="nav-link" href="{% url 'accounts:invites' %}">
               <img class="profile-pic" src="{{ MEDIA_URL }}{{ user.groupupuser.profile_pic.url }}">
             </a>
           </li>
         </ul>
-
+        </div>
 
         <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
           <div class="offcanvas-header">
