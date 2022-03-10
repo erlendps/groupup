@@ -24,15 +24,17 @@ class GroupCreateForm(forms.ModelForm):
                                     label="Interests",
                                     queryset=Interest.objects.all(),
                                     widget=InterestsWidget)
+
     class Meta:
         model = UserGroup
-        fields = ["name", "description", "group_pic"]
+        fields = ["name", "description", "group_pic", "admin_contact"]
 
     def save(self, owner: GroupUpUser) -> UserGroup:
         """
         Creates a new instance of GroupUpUser and saves the result.
         """
         self.instance.group_admin = owner
+        self.instance.admin_contact = self.cleaned_data['admin_contact']
         returnValue = super().save(commit=True)
         self.instance.members.add(owner)
         for interest in self.cleaned_data['interests']:
