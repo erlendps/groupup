@@ -37,6 +37,9 @@ class Reviews(models.Model):
     def __str__(self):
         return "Group: " + self.group_name + "\nReview: " + self.review
 
+
+
+
 class GroupUpUser(models.Model):
     """Represents a user who uses the app
     
@@ -122,12 +125,11 @@ class UserGroup(models.Model):
     members = models.ManyToManyField(GroupUpUser)
     group_admin = models.ForeignKey(GroupUpUser, on_delete=models.CASCADE, related_name="group_admin")
     reviews = models.ManyToManyField(Reviews, blank=True)
+    admin_contact = models.EmailField(max_length=100, default='example@gmail.com')
+    
 
     class Meta:
         db_table = 'user_group'
-        permissions = (
-            ("group_admin", "Create and respond to group matches"), # probably can be removed
-        )
 
 
     def get_members(self):
@@ -223,4 +225,10 @@ class UserGroup(models.Model):
     
     def __str__(self):
         return self.name
-        
+
+
+class DateAvailable(models.Model):
+    """  """
+    group = models.ForeignKey(UserGroup, on_delete=models.CASCADE, related_name='connected_group')
+    date = models.DateField()
+    
