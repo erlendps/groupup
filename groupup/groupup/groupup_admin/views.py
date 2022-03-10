@@ -1,12 +1,13 @@
 from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from groupup.accounts.models import GroupUpUser, UserGroup, Interest
+from groupup.accounts.models import GroupUpUser, UserGroup, DateAvailable
 from .models import Matches, Invite
-from .forms import HandleRequestForm, InviteUserForm
+from .forms import HandleRequestForm, InviteUserForm, AddAvailableDateForm, RemoveDate
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.db.models.functions import Lower
+
 
 
 @login_required
@@ -57,11 +58,11 @@ def group_browsing(request, pk):
 
     # form handling
     if request.method == "POST":
-        form = InviteUserForm(request.POST)
-        if form.is_valid():
+        invite_form = InviteUserForm(request.POST)
+        if invite_form.is_valid():
             user = None
             try:
-                user = GroupUpUser.objects.get(user=User.objects.get(username=form.cleaned_data.get("username")))
+                user = GroupUpUser.objects.get(user=User.objects.get(username=invite_form.cleaned_data.get("username")))
                 if user.is_member_of_group(group):
                     messages.warning(request, "User already a member")
                 elif user.has_pending_invite(group):
@@ -73,14 +74,18 @@ def group_browsing(request, pk):
 
             except:
                 messages.warning(request, "User does not exist.")
-            form = InviteUserForm()
+            invite_form = InviteUserForm()
             return HttpResponseRedirect(request.path)
     else:
-        form = InviteUserForm()
+        invite_form = InviteUserForm()
+    add_date = AddAvailableDateForm()
+    remove_date = RemoveDate(group)
 
     context = {
         "group": group,
-        "form": form,
+        "invite_form": invite_form,
+        "add_date": add_date,
+        "remove_date": remove_date,
     }
     return render(request, "groupup_admin/group_site_admin.html", context)
 
@@ -173,3 +178,32 @@ def handle_match_request(request, pk):
             form = HandleRequestForm()
         context = {'group': requesting_group, 'form': form}
         return render(request, 'groupup_admin/group_site_handle_request.html', context)
+
+def add_date(request, pk):
+    if request.method == 'POST':
+        add_date_form = AddAvailableDateForm(request.POST)
+        if add_date_form.is_valid():
+            group = UserGroup.objects.get(pk=pk)
+            date = add_date_form.cleaned_data['date']
+            if len(DateAvailable.objects.filter(group=group, date=date))!=0:
+                return redirect("/admin/groups/{0}".format(pk))
+            date_available = DateAvailable(group=group, date=date)
+            date_available.save()
+            return HttpResponseRedirect("/admin/groups/{0}".format(pk))
+        else:
+            return redirect("/admin/groups/{0}".format(pk))
+    else:
+        return redirect("/admin/groups/{0}".format(pk))
+
+
+def remove_date(request, pk):
+    if request.method == "POST":
+        group = UserGroup.objects.get(pk=pk)
+        remove_date_form = RemoveDate(group, request.POST)
+        if remove_date_form.is_valid():
+            group = UserGroup.objects.get(pk=pk)
+            date = remove_date_form.cleaned_data['date']
+            date.delete()
+            return HttpResponseRedirect("/admin/groups/{0}".format(pk))
+    else:
+        return redirect("/admin/groups/{0}".format(pk))

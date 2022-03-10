@@ -231,4 +231,7 @@ class DateAvailable(models.Model):
     """  """
     group = models.ForeignKey(UserGroup, on_delete=models.CASCADE, related_name='connected_group')
     date = models.DateField()
+
+    def __str__(self):
+        return str(self.date)
     

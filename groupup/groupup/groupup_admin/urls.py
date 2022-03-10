@@ -10,4 +10,6 @@ urlpatterns = [
     path('sendmatchrequest/<int:pk>', views.send_match_request, name='send_match'),
     path('viewmatchrequests/<int:pk>', views.view_match_requests, name='view_match'),
     path('handle_requests/<int:pk>', views.handle_match_request, name='handle_request'),
+    path('groups/<int:pk>/add_date', views.add_date, name='add_date'),
+    path('groups/<int:pk>/remove_date', views.remove_date, name='remove_date')
 ] 

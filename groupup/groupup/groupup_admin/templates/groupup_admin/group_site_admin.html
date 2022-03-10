@@ -9,7 +9,7 @@
   <h2>Invite users</h2>
   <form action="{{ group.id }}" method="post">
     {% csrf_token %}
-    {% bootstrap_form form %}
+    {% bootstrap_form invite_form %}
     {% buttons %}
       <button type="submit" class="btn btn-primary">
         Invite!
@@ -37,4 +37,24 @@
   {% endfor %}
   </ul>
 {% endif%}
+
+<form action="{% url 'group_admin:add_date' group.id %}" method="post">
+  {% csrf_token %}
+    {% bootstrap_form add_date %}
+    {% buttons %}
+      <button type="submit" class="btn btn-primary">
+        Add
+      </button>
+    {% endbuttons %}
+</form>
+<form action="{% url 'group_admin:remove_date' group.id %}" method="post">
+  {% csrf_token %}
+    {{ remove_date }}
+    {% buttons %}
+      <button type="submit" class="btn btn-primary">
+        Remove
+      </button>
+    {% endbuttons %}
+</form>
+
 {% endblock %}
