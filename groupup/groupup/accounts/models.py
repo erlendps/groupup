@@ -220,6 +220,7 @@ class UserGroup(models.Model):
         return len(received_matches+requested_matches) != 0
 
     def get_absolute_url(self):
+        """Returns the absolute url for this group's site"""
         return reverse('accounts:group_site', kwargs={'pk': self.pk})
         
     
@@ -228,7 +229,8 @@ class UserGroup(models.Model):
 
 
 class DateAvailable(models.Model):
-    """  """
+    """A model that represents a date which a group is available."""
+
     group = models.ForeignKey(UserGroup, on_delete=models.CASCADE, related_name='connected_group')
     date = models.DateField()
 

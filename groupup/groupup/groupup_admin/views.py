@@ -180,6 +180,11 @@ def handle_match_request(request, pk):
         return render(request, 'groupup_admin/group_site_handle_request.html', context)
 
 def add_date(request, pk):
+    """Handles adding a date the group is available.
+    
+    Checks if the date is already added and redirects back to site if it is.
+    """
+    
     if request.method == 'POST':
         add_date_form = AddAvailableDateForm(request.POST)
         if add_date_form.is_valid():
@@ -197,6 +202,8 @@ def add_date(request, pk):
 
 
 def remove_date(request, pk):
+    """Handles the removal of a available date for a group."""
+
     if request.method == "POST":
         group = UserGroup.objects.get(pk=pk)
         remove_date_form = RemoveDate(group, request.POST)
