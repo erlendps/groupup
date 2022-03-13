@@ -29,6 +29,16 @@
                 {% endfor %}
             </div>
         </ul>
+        <h5>Available on:</h5>
+        <p>
+          {% if group.connected_group.all %}
+            {% for date in group.connected_group.all %}
+              {{ date.date }}
+            {% endfor %}
+          {% else %}
+            Sorry, this group has not specified any available dates.
+          {% endif %}
+        </p>
         {% if group in user.groupupuser.get_groups %}
             <a href="{% url 'accounts:group_matches' group.id %}">See matches for {{ group.name }}!</a>
         {% endif %}
@@ -42,7 +52,7 @@
             {% endfor %}
         </ul>
     </div>
-    <div id=sidepanel id="members" class="container" style="margin: 2em; color: white">
+    <div id="sidepanel" class="container" style="margin: 2em; color: white">
         <div style="margin: 1em; width: fit-content;">
             <p>Age-gap: {{ group.get_age_gap }}</p>
             <p>Admin E-mail: {{ group.admin_contact }}</p>
@@ -52,7 +62,7 @@
             <div>
                 
             </div>
-            <div class=scroll style="margin: 1em; width: 200px;">
+            <div class="scroll" style="margin: 1em; width: 200px;">
                 <ul>
                     {% for member in group.members.all %}
                         <li>{{ member.user.username }}</li>
