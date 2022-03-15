@@ -1,7 +1,7 @@
 from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from groupup.accounts.models import GroupUpUser, UserGroup
+from groupup.accounts.models import GroupUpUser, UserGroup, Interest
 from .models import Matches, Invite
 from .forms import HandleRequestForm, InviteUserForm
 from django.contrib.auth.models import User
@@ -28,8 +28,18 @@ def all_groups(request):
     if not request.user.groupupuser.is_a_group_admin():
         raise Http404
 
+    allInterests = list(Interest.objects.all().order_by(Lower('name'), 'pk'))
+    filteredInterests = request.GET.get("interests")
+
     groups = list(UserGroup.objects.all().order_by(Lower('name'), 'pk'))
-    return render(request, "groupup_admin/all_groups.html", {"groups": groups})
+    result = []
+    if filteredInterests is None or len(filteredInterests) == 0:
+        result = groups
+    else:
+        for group in groups:
+            if set(filteredInterests).issubset(set([str(x.pk) for x in group.interests.all()])):
+                result.append(group)
+    return render(request, "groupup_admin/all_groups.html", {"groups": result, "interests": allInterests})
 
 
 @login_required
