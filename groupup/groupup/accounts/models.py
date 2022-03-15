@@ -169,6 +169,9 @@ class UserGroup(models.Model):
             return list(Matches.objects.filter(receiver=self))
         return list(Matches.objects.filter(requestor=self))
 
+    def get_reviews(self):
+        return list(Reviews)
+
     def get_matchrequesting_groups(self):
         """Returns a list of groups that has requested a match with self."""
 
