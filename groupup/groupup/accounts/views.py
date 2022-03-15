@@ -82,6 +82,7 @@ def group_site(request, pk):
     context = {"group": group}
     return render(request, "accounts/group_site.html", context)
 
+    
 
 @login_required
 def group_matches(request, pk):
