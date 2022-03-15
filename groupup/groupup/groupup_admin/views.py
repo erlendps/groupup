@@ -7,6 +7,7 @@ from .forms import HandleRequestForm, InviteUserForm, AddAvailableDateForm, Remo
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.db.models.functions import Lower
+from django.db.models import Q
 
 
 
@@ -166,7 +167,7 @@ def handle_match_request(request, pk):
             form = HandleRequestForm(request.POST)
             if form.is_valid():
                 status = form.cleaned_data['status']
-                match = Matches.objects.get(requestor=requesting_group, receiver=receiving_group)
+                match = Matches.objects.get(requestor=requesting_group, receiver=receiving_group, have_met = False)
                 match.status = status
                 match.save()
                 if status == "confirmed":
@@ -179,6 +180,7 @@ def handle_match_request(request, pk):
         context = {'group': requesting_group, 'form': form}
         return render(request, 'groupup_admin/group_site_handle_request.html', context)
 
+@login_required
 def add_date(request, pk):
     """Handles adding a date the group is available.
     
@@ -200,7 +202,7 @@ def add_date(request, pk):
     else:
         return redirect("/admin/groups/{0}".format(pk))
 
-
+@login_required
 def remove_date(request, pk):
     """Handles the removal of a available date for a group."""
 
@@ -214,3 +216,19 @@ def remove_date(request, pk):
             return HttpResponseRedirect("/admin/groups/{0}".format(pk))
     else:
         return redirect("/admin/groups/{0}".format(pk))
+
+@login_required
+def have_met(request, pk):
+    users_group = UserGroup.objects.get(pk=pk)
+    group = UserGroup.objects.get(pk=request.session.get("group_pk"))
+
+    match = list(Matches.objects.filter(receiver=users_group, requestor=group, have_met=False)) + list(Matches.objects.filter(receiver=group, requestor=users_group, have_met=False))
+    print(match)
+    if len(match) == 0 or len(match) > 1:
+        print("yes")
+        return redirect("/admin/groups/{0}".format(pk))
+    match = match[0]
+    match.have_met = True
+    match.save()
+    return redirect("/admin/groups/{0}".format(request.session.get("group_pk")))
+    
