@@ -1,14 +1,19 @@
 from django import forms
 from groupup.accounts.widgets import DatePickerInput
-from groupup.accounts.models import UserGroup
+from datetime import date as dt
+
+
+def validate_date(date):
+    if date < dt.today():
+        raise forms.ValidationError("%s is before today".format(date))
 
 class AddAvailableDateForm(forms.Form):
     """  """
-    date = forms.DateField(label='date', widget=DatePickerInput)
+    date = forms.DateField(label='Date to add', widget=DatePickerInput, validators=[validate_date])
 
 class RemoveDate(forms.Form):
     """  """
-    date = forms.ModelChoiceField(queryset=None)
+    date = forms.ModelChoiceField(label='Date to remove', queryset=None)
     
     def __init__(self, group, *args, **kwargs):
         super(RemoveDate, self).__init__(*args, **kwargs)
