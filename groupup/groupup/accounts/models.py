@@ -37,9 +37,6 @@ class Reviews(models.Model):
     def __str__(self):
         return "Group: " + self.group_name + "\nReview: " + self.review
 
-
-
-
 class GroupUpUser(models.Model):
     """Represents a user who uses the app
     
@@ -168,8 +165,8 @@ class UserGroup(models.Model):
         """Returns a list of matches where either the group is the receiver or requestor of a match request."""
 
         if is_receiver:
-            return list(Matches.objects.filter(receiver=self))
-        return list(Matches.objects.filter(requestor=self))
+            return list(Matches.objects.filter(receiver=self, have_met = False))
+        return list(Matches.objects.filter(requestor=self, have_met = False))
 
     def get_reviews(self):
         return (self.reviews.all())
@@ -199,10 +196,10 @@ class UserGroup(models.Model):
         
         confirmed_groups = []
         for match in self.get_matches(True):
-            if match.status == "confirmed":
+            if match.status == "confirmed" and not match.have_met:
                 confirmed_groups.append(match.requestor)
         for match in self.get_matches(False):
-            if match.status == "confirmed":
+            if match.status == "confirmed" and not match.have_met:
                 confirmed_groups.append(match.receiver)
         
         return confirmed_groups
@@ -215,8 +212,8 @@ class UserGroup(models.Model):
     def has_relation_with(self, group):
         """Returns true if self has a relation with the given group."""
 
-        received_matches = list(Matches.objects.filter(receiver=self, requestor=group))
-        requested_matches = list(Matches.objects.filter(receiver=group, requestor=self))
+        received_matches = list(Matches.objects.filter(receiver=self, requestor=group, have_met=False))
+        requested_matches = list(Matches.objects.filter(receiver=group, requestor=self, have_met=False))
         return len(received_matches+requested_matches) != 0
 
     def get_absolute_url(self):
