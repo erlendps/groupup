@@ -26,6 +26,16 @@ class Interest(models.Model):
     def __str__(self):
         return self.name
 
+class Reviews(models.Model):
+    """Represents a review of the group"""
+    group_name = models.CharField(max_length=30)
+    review = models.CharField(max_length=280)
+
+    class Meta:
+        db_table = 'review' 
+    
+    def __str__(self):
+        return "Group: " + self.group_name + "\nReview: " + self.review
 
 class GroupUpUser(models.Model):
     """Represents a user who uses the app
@@ -102,6 +112,7 @@ class UserGroup(models.Model):
     
     A group has multiple fields, such as name, description. It has a many to many relation
     to GroupUpUsers and a special field (group_admin), which is a one to many field.
+    It also has a field for list of reviews.
     """
 
     name = models.CharField(max_length=30)
@@ -110,6 +121,7 @@ class UserGroup(models.Model):
     group_pic = models.ImageField(upload_to=group_image_path, blank=True)
     members = models.ManyToManyField(GroupUpUser)
     group_admin = models.ForeignKey(GroupUpUser, on_delete=models.CASCADE, related_name="group_admin")
+    reviews = models.ManyToManyField(Reviews, blank=True)
 
     class Meta:
         db_table = 'user_group'
