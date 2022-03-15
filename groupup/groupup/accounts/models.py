@@ -120,7 +120,7 @@ class UserGroup(models.Model):
 
     def get_members(self):
         """Returns a list of members of the group."""
-
+        
         return list(self.members.all())
 
     def num_of_memers(self):
