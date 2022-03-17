@@ -22,7 +22,8 @@
         <h1>{{ group.name }}</h1>
         <p>{{ group.description }}</p>
         <h5>Interests</h5>
-        <ul style="list-style-type:none;"><div>
+        <ul style="list-style-type:none;">
+            <div>
                 {% for interest in group.interests.all %}
                     <li>{{ interest.name }}</li>
                 {% endfor %}
@@ -31,6 +32,15 @@
         {% if group in user.groupupuser.get_groups %}
             <a href="{% url 'accounts:group_matches' group.id %}">See matches for {{ group.name }}!</a>
         {% endif %}
+        <h5>Reviews</h5>
+        <ul style="list-style-type: none;">
+            {% for review in group.reviews.all %}
+            <div style="border: 0.2em solid; padding: 0.2em; margin-top: 2px;">
+                <li>Group: {{review.group_name}}</li>
+                <li>Review: {{review.review}}</li>
+            </div>  
+            {% endfor %}
+        </ul>
     </div>
     <div id=sidepanel id="members" class="container" style="margin: 2em; color: white">
         <div style="margin: 1em; width: fit-content;">
