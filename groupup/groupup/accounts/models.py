@@ -26,16 +26,6 @@ class Interest(models.Model):
     def __str__(self):
         return self.name
 
-class Reviews(models.Model):
-    """Represents a review of the group"""
-    group_name = models.CharField(max_length=30)
-    review = models.CharField(max_length=280)
-
-    class Meta:
-        db_table = 'review' 
-    
-    def __str__(self):
-        return "Group: " + self.group_name + "\nReview: " + self.review
 
 class GroupUpUser(models.Model):
     """Represents a user who uses the app
@@ -121,7 +111,6 @@ class UserGroup(models.Model):
     group_pic = models.ImageField(upload_to=group_image_path, blank=True)
     members = models.ManyToManyField(GroupUpUser)
     group_admin = models.ForeignKey(GroupUpUser, on_delete=models.CASCADE, related_name="group_admin")
-    reviews = models.ManyToManyField(Reviews, blank=True)
     admin_contact = models.EmailField(max_length=100, default='example@gmail.com')
     
 
@@ -223,6 +212,18 @@ class UserGroup(models.Model):
     
     def __str__(self):
         return self.name
+
+
+class Reviews(models.Model):
+    """Represents a review of the group"""
+    group = models.ForeignKey(UserGroup, on_delete=models.CASCADE, related_name="reviews")
+    review = models.CharField(max_length=280)
+
+    class Meta:
+        db_table = 'review' 
+    
+    def __str__(self):
+        return self.review
 
 
 class DateAvailable(models.Model):

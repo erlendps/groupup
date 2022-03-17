@@ -46,8 +46,7 @@
         <ul style="list-style-type: none;">
             {% for review in group.reviews.all %}
             <div style="border: 0.2em solid; padding: 0.2em; margin-top: 2px;">
-                <li>Group: {{review.group_name}}</li>
-                <li>Review: {{review.review}}</li>
+                <li>{{review.review}}</li>
             </div>  
             {% endfor %}
         </ul>
