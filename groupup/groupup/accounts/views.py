@@ -1,3 +1,5 @@
+from numbers import Number
+from posixpath import split
 from django.shortcuts import render
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.edit import FormView
@@ -80,7 +82,7 @@ def all_groups(request):
         result = groups
     else:
         for group in groups:
-            if set(filteredInterests).issubset(set([str(x.pk) for x in group.interests.all()])):
+            if set([int(x) for x in filteredInterests.split(',')]).issubset(set([int(x.pk) for x in group.interests.all()])):
                 result.append(group)
     return render(request, "accounts/all_groups.html", {"groups": result, "interests": allInterests})
 
