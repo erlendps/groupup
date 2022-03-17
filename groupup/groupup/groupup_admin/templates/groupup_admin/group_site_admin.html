@@ -24,22 +24,24 @@
     {% for usergroup in user.groupupuser.get_groups_where_admin %}
       {% if group not in usergroup.get_related_groups %}
         <div>
-          <a class="btn btn-primary admin-buttons" href="{% url 'group_admin:send_match' usergroup.id %}" style="width: 40%; word-break; break-word;">
+          <a class="btn btn-primary" href="{% url 'group_admin:send_match' usergroup.id %}" style="width: 40%; word-break; break-word;">
           Send match request on behalf of {{ usergroup.name }}
           </a>
         </div>
       {% endif %}
     {% endfor %}
     {% endif %}
-    </div>
-
+    
     {% for usergroup in user.groupupuser.get_groups_where_admin %}
       {% if group in usergroup.get_confirmed_groups %}
       <div>
-        <a href="{% url 'group_admin:set_met' usergroup.id %}" class="btn btn-primary admin-buttons">{{ usergroup.name }} have met this group</a>
+        <a href="{% url 'group_admin:set_met' usergroup.id %}" class="btn btn-primary" style="width: 40%;">
+          {{ usergroup.name }} have met this group
+        </a>
       </div>
       {% endif %}
     {% endfor %}
+    </div>
   {% endif %}
 
   {% if group in user.groupupuser.get_groups_where_admin %}
