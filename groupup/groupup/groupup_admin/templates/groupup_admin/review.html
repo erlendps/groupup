@@ -1,8 +1,13 @@
 {% extends 'accounts/base.html' %}
+{% load bootstrap5 %}
 
 {% block title %}Review matched group{% endblock %}
 
 {% block content %}
-<h1>Write review</h1>
-
+<h1>Write Review</h1>
+    <form method="post">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        <input type="submit" value="OK">
+    </form>
 {% endblock %}
