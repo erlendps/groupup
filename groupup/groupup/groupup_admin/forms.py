@@ -33,4 +33,11 @@ class InviteUserForm(forms.Form):
     """Form for inviting a user"""
 
     username = forms.CharField(max_length=30, label="Username")
+
+
+class ReviewForm(forms.Form):
+    """"Form for wiriting reviews"""
+    
+    review = forms.CharField(max_length = 280, label = "Review")
+    
     
