@@ -4,10 +4,14 @@
 {% block title %}Review matched group{% endblock %}
 
 {% block content %}
-<h1>Write Review</h1>
-    <form method="post">
+
+<div style="display: flex; flex-direction: column; align-items: center;">
+    <h2 style="margin-top: 20px;">Write a review</h2>
+    <form method="post" style="margin-top: 20px;">
         {% csrf_token %}
         {% bootstrap_form form %}
-        <input type="submit" value="OK">
+        <button class= "btn btn-primary" type="submit">Submit</button>
     </form>
+</div>
+
 {% endblock %}
