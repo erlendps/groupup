@@ -1,9 +1,9 @@
-from django.http import Http404, HttpResponseRedirect
+from django.http import Http404, HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from groupup.accounts.models import GroupUpUser, UserGroup, DateAvailable
+from groupup.accounts.models import GroupUpUser, UserGroup, DateAvailable, Interest
 from .models import Matches, Invite
-from .forms import HandleRequestForm, InviteUserForm, AddAvailableDateForm, RemoveDate
+from .forms import HandleRequestForm, InviteUserForm, AddAvailableDateForm, RemoveDate, ReviewForm
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.db.models.functions import Lower
@@ -225,10 +225,20 @@ def have_met(request, pk):
     match = list(Matches.objects.filter(receiver=users_group, requestor=group, have_met=False)) + list(Matches.objects.filter(receiver=group, requestor=users_group, have_met=False))
     print(match)
     if len(match) == 0 or len(match) > 1:
-        print("yes")
         return redirect("/admin/groups/{0}".format(pk))
     match = match[0]
     match.have_met = True
     match.save()
-    return redirect("/admin/groups/{0}".format(request.session.get("group_pk")))
+    return redirect("/admin/groups/review/{0}".format(request.session.get("group_pk")))
     
+@login_required
+def write_review(request, pk):
+    if request.method == "POST":
+        review_form = ReviewForm(group, request.POST)
+        if review_form.is_valid():
+            group = UserGroup.objects.get(pk=pk)
+            return HttpResponseRedirect("/admin/groups/{0}".format(pk))
+    else:
+        form = ReviewForm()
+        context = {'form': form}
+        return render(request, "groupup_admin/review.html", context)

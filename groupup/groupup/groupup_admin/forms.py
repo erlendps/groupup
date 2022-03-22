@@ -38,6 +38,6 @@ class InviteUserForm(forms.Form):
 class ReviewForm(forms.Form):
     """"Form for wiriting reviews"""
     
-    review = forms.CharField(max_length = 280, label = "Review")
+    review = forms.CharField(widget=forms.Textarea(attrs={"rows":5, "cols":30}), label="")
     
     
