@@ -1,13 +1,12 @@
-from django.http import Http404, HttpResponseRedirect, HttpResponse
+from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from groupup.accounts.models import GroupUpUser, UserGroup, DateAvailable, Interest
+from groupup.accounts.models import GroupUpUser, UserGroup, DateAvailable, Interest, Reviews
 from .models import Matches, Invite
 from .forms import HandleRequestForm, InviteUserForm, AddAvailableDateForm, RemoveDate, ReviewForm
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.db.models.functions import Lower
-from django.db.models import Q
 
 
 
@@ -234,9 +233,11 @@ def have_met(request, pk):
 @login_required
 def write_review(request, pk):
     if request.method == "POST":
-        review_form = ReviewForm(group, request.POST)
+        review_form = ReviewForm(request.POST)
         if review_form.is_valid():
             group = UserGroup.objects.get(pk=pk)
+            review = Reviews.objects.create(group=group, review=review_form.cleaned_data["review"])
+            review.save()
             return HttpResponseRedirect("/admin/groups/{0}".format(pk))
     else:
         form = ReviewForm()
