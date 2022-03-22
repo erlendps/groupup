@@ -4,31 +4,46 @@
 {% block content %}
 <div id="main" class="box" style="display: flex; flex-direction: row;" >
   <div id="groups" class="container" style="border: 0.1em; border-style: solid; margin: 2em; width: fit-content;">
-    <div id="groups" class="container" style="margin: 2em; width: fit-content;">
+    <div id="groups" class="container" style="margin: 2em; width: fit-content; border-bottom: 0.2em solid;">
       <h2>Groups</h2>
     </div>
     <div id="groups" class="container" style="margin: 2em; width: fit-content;">
       <ul style="list-style-type: none; padding: 0;">
         {% for group in groups %}
-        <li>
-          <a class="text-decoration-none" style="color: inherit;" href="{% url 'accounts:group_site' group.id %}">
-            {{ group.name }}
+        <li style="margin-top: 10px;">
+          <a class="text-decoration-none" style="color: inherit; font-size:x-large; display: flex; flex-direction: row;" href="{% url 'accounts:group_site' group.id %}">
+            <img class="profile-pic" src="{{ MEDIA_URL }}{{ group.group_pic.url }}" style="width: 30px; height: 30px; object-fit: cover; margin-right: 10px;">{{ group.name }}
           </a>
+         
         </li>
         {% endfor %}
       </ul>
     </div>
   </div>
-  <div class="vl" style="height: 1000px; border-left: 6px solid black;"></div>
   <div id="feed" class="container" style="border: 0.1em; border-style: solid; margin: 2em;">
-    <div id="groups" class="container" style="margin: 2em; width: fit-content;">
+    <div id="groups" class="container" style="margin: 2em; width: fit-content; border-bottom: 0.2em solid;">
       <h2>Feed</h2>
     </div>
     <div id="groups" class="container" style="margin: 2em; width: fit-content;">
       <ul style="list-style-type: none">
-        <li>Feed 1</li>
-        <li>Feed 2</li>
-        <li>Feed 3</li>
+        <li style="border: 0.2em solid; margin-bottom: 20px;">
+          <div style="margin-right: 500px; margin-left: 40px; margin-top: 20px;">
+            <h4>Feed title 1</h4>
+            {% lorem 1 p %}
+          </div>
+        </li>
+        <li style="border: 0.2em solid; margin-bottom: 20px;">
+          <div style="margin-right: 500px; margin-left: 40px; margin-top: 20px;">
+            <h4>Feed title 2</h4>
+            {% lorem 1 p %}
+          </div>
+        </li>
+        <li style="border: 0.2em solid; margin-bottom: 20px;">
+          <div style="margin-right: 500px; margin-left: 40px; margin-top: 20px;">
+            <h4>Feed title 3</h4>
+            {% lorem 1 p %}
+          </div>
+        </li>
       </ul>
     </div>
   </div>
