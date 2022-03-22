@@ -1,4 +1,5 @@
 import datetime
+from dateutil.relativedelta import relativedelta
 from django.test import TestCase
 from .models import Interest, Reviews, GroupUpUser, UserGroup, DateAvailable
 from groupup.groupup_admin.models import Invite, Matches
@@ -217,9 +218,12 @@ class GroupUpUserTest(TestCase):
 
 class UserGroupTest(TestCase):
     def setUp(self):
+        """Sets up data used throughout the tests."""
+
         gaming = Interest.objects.create(name="Gaming")
         user = create_user("Matias")
         admin = create_user("Morten")
+        basic = create_user("inga")
         userGroup = UserGroup.objects.create(name="SuicideSquad",
                                             description="Vi elsker suicide-shots",
                                             group_pic=img,
@@ -230,4 +234,128 @@ class UserGroupTest(TestCase):
         userGroup.members.add(admin)
     
     def test_constructor(self):
-        user = create_user
+        """Tests that the constructor has the correct fields."""
+
+        user = create_user("adminman")
+        photo = Interest.objects.create(name="Photos")
+        group = UserGroup.objects.create(name="PhotoManiacs",
+                                        description="We are the maniacs",
+                                        group_pic=img,
+                                        group_admin=user)
+        group.members.add(user)
+        group.interests.add(photo)
+
+        self.assertEqual(group.name, "PhotoManiacs")
+        self.assertEqual(group.description, "We are the maniacs")
+        self.assertEqual(group.group_admin, user)
+        self.assertEqual(group.admin_contact, "example@gmail.com")
+        self.assertEqual(list(group.members.all()), [user])
+        self.assertEqual(list(group.interests.all()), [photo])
+
+    def test_get_members(self):
+        """Tests the get_members function by checking if members are in the list or not."""
+
+        matias = GroupUpUser.objects.get(user=User.objects.get(username="Matias"))
+        morten = GroupUpUser.objects.get(user=User.objects.get(username="Morten"))
+        inga = GroupUpUser.objects.get(user=User.objects.get(username="inga"))
+        group = UserGroup.objects.get(name="SuicideSquad")
+
+        self.assertTrue(matias in list(group.get_members()))
+        self.assertTrue(morten in list(group.get_members()))
+        self.assertFalse(inga in list(group.get_members()))    
+
+    def test_num_of_members(self):
+        """Tests the number of members function."""
+
+        group = UserGroup.objects.get(name="SuicideSquad")
+        self.assertEqual(group.num_of_members(), 2)
+
+    def test_get_age_gap(self):
+        """Tests the age gap function.
+        
+        Uses relativedelta so that we dont have to update the test each year.
+        """
+
+        age1 = abs(relativedelta(datetime.date(2001, 4, 3), datetime.date.today()).years)
+        age2 = abs(relativedelta(datetime.date(1998, 4, 3), datetime.date.today()).years)
+        # everyone same age
+        group = UserGroup.objects.get(name="SuicideSquad")
+        self.assertEqual(group.get_age_gap(), "Everyone is {0} years old".format(age1))
+
+        # different ages
+        morten = GroupUpUser.objects.get(user=User.objects.get(username="Morten"))
+        morten.birthday = datetime.date(1998, 4, 3)
+        morten.save()
+        self.assertEqual(group.get_age_gap(), "Ages from {0} to {1}".format(age1, age2))
+        
+    def test_get_three_interests(self):
+        """Tests that the method correctly fetches 3 interests."""
+
+        group = UserGroup.objects.get(name="SuicideSquad")
+        gaming = Interest.objects.get(name="Gaming")
+        hangover = Interest.objects.create(name="Hangovers")
+        movies = Interest.objects.create(name="Movies")
+        dogs = Interest.objects.create(name="Dogs")
+        # only 1 interest
+        self.assertEqual(group.get_three_interests(), [gaming])
+        
+        # 3 interests, should be in lexiographic order
+        group.interests.add(hangover)
+        group.interests.add(movies)
+        self.assertEqual(group.get_three_interests(), [gaming, hangover, movies])
+
+        # 4 interests, should include the three first in lexiographic order
+        group.interests.add(dogs)
+        self.assertEqual(group.get_three_interests(), [dogs, gaming, hangover])
+
+    def test_matching_for_group(self):
+        """Tests the methods related to matching with groups."""
+
+        # create two groups
+        ola = create_user("ola")
+        donald = create_user("donald")
+        beer = setup_group("ola", "beermen")
+        wine = setup_group("donald", "Winemen")
+
+        group = UserGroup.objects.get(name="SuicideSquad")
+
+        # at first group should have no matches
+        self.assertEqual(list(group.get_related_groups()), [])
+
+        # create match where group is requestor
+        match1 = Matches.objects.create(requestor=group, receiver=beer)
+        self.assertEqual(list(group.get_related_groups()), [beer])
+        self.assertTrue(beer in group.get_matchreceiving_groups())
+        self.assertFalse(beer in group.get_matchrequesting_groups())
+        # should now have a relation
+        self.assertTrue(group.has_relation_with(beer))
+
+        # create match where group is receiver
+        match2 = Matches.objects.create(requestor=wine, receiver=group)
+        self.assertTrue(wine in group.get_related_groups())
+        self.assertFalse(wine in group.get_matchreceiving_groups())
+        self.assertTrue(wine in group.get_matchrequesting_groups())
+
+        #confirm match 1
+        match1.status = "confirmed"
+        match1.save()
+        self.assertEqual(group.get_confirmed_groups(), [beer])
+
+        # set have_met
+        match1.have_met = True
+        match1.save()
+        # confirmed grups should now be empty
+        self.assertEqual(group.get_confirmed_groups(), [])
+        # and there should not be a relation between the groups
+        self.assertFalse(group.has_relation_with(beer))
+
+    def test_get_reviews(self):
+        """Tests the get reviews function."""
+
+        # create a review
+        group = UserGroup.objects.get(name="SuicideSquad")
+        review1 = Reviews.objects.create(group=group, review="They are funny yes")
+        self.assertEqual(group.get_reviews(), [review1])
+        review2 = Reviews.objects.create(group=group, review="They are not funny yes")
+        self.assertTrue(review2 in group.get_reviews())
+
