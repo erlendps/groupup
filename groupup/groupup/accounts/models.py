@@ -123,7 +123,7 @@ class UserGroup(models.Model):
         
         return list(self.members.all())
 
-    def num_of_memers(self):
+    def num_of_members(self):
         """Returns the number of members in this group."""
 
         return len(self.members.all())
@@ -158,7 +158,9 @@ class UserGroup(models.Model):
         return list(Matches.objects.filter(requestor=self, have_met = False))
 
     def get_reviews(self):
-        return (self.reviews.all())
+        """Returns a list of all reviews given to this group."""
+
+        return list(self.reviews.all())
 
     def get_matchrequesting_groups(self):
         """Returns a list of groups that has requested a match with self."""
@@ -207,6 +209,7 @@ class UserGroup(models.Model):
 
     def get_absolute_url(self):
         """Returns the absolute url for this group's site"""
+
         return reverse('accounts:group_site', kwargs={'pk': self.pk})
         
     
@@ -216,6 +219,7 @@ class UserGroup(models.Model):
 
 class Reviews(models.Model):
     """Represents a review of the group"""
+
     group = models.ForeignKey(UserGroup, on_delete=models.CASCADE, related_name="reviews")
     review = models.CharField(max_length=280)
 
