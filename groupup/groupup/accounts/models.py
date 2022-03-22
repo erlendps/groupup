@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.timezone import now
 from django.contrib.auth.models import User
 import datetime
 from dateutil.relativedelta import relativedelta
@@ -84,6 +85,15 @@ class GroupUpUser(models.Model):
             return True
         return False
 
+    def confirmed_groups_where_admin(self):
+        """Returns a list of all groups that has a confirmed relation with groups this user is admin of."""
+
+        groups = []
+        for group in self.get_groups_where_admin():
+            groups += group.get_confirmed_groups()
+
+        return groups
+
     def __str__(self):
         return self.user.username
 
@@ -158,9 +168,9 @@ class UserGroup(models.Model):
         return list(Matches.objects.filter(requestor=self, have_met = False))
 
     def get_reviews(self):
-        """Returns a list of all reviews given to this group."""
+        """Returns a list of 3 newest reviews."""
 
-        return list(self.reviews.all())
+        return list(self.reviews.all().order_by('-date_published', '-pk')[:3])
 
     def get_matchrequesting_groups(self):
         """Returns a list of groups that has requested a match with self."""
@@ -222,12 +232,13 @@ class Reviews(models.Model):
 
     group = models.ForeignKey(UserGroup, on_delete=models.CASCADE, related_name="reviews")
     review = models.CharField(max_length=280)
+    date_published = models.DateField(default=now)
 
     class Meta:
         db_table = 'review' 
     
     def __str__(self):
-        return self.review
+        return "review_to_{0}_{1}".format(self.group.name, self.review[:10])
 
 
 class DateAvailable(models.Model):
