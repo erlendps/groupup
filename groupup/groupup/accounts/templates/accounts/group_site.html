@@ -2,19 +2,19 @@
 
 {% block content %}
 <style>
-    #sidepanel{
+    #sidepanel {
         background-color: #006A6E;
         width: 500px;
         height: 500px;
         border-radius: 25px;
     }
-    div.scroll{
+
+    div.scroll {
         height: 380px;
         overflow-x: hidden;
         overflow-y: auto;
         text-align: left;
     }
-
 </style>
 <div id="main" class="box" style="display: flex; flex-direction: row;">
     <div id="info" class="container" style="margin: 2em; width: fit-content;">
@@ -25,29 +25,29 @@
         <ul style="list-style-type:none;">
             <div>
                 {% for interest in group.interests.all %}
-                    <li>{{ interest.name }}</li>
+                <li>{{ interest.name }}</li>
                 {% endfor %}
             </div>
         </ul>
         <h5>Available on:</h5>
         <p>
-          {% if group.connected_group.all %}
+            {% if group.connected_group.all %}
             {% for date in group.connected_group.all %}
-              {{ date.date }}
+            {{ date.date }}
             {% endfor %}
-          {% else %}
+            {% else %}
             Sorry, this group has not specified any available dates.
-          {% endif %}
+            {% endif %}
         </p>
         {% if group in user.groupupuser.get_groups %}
-            <a href="{% url 'accounts:group_matches' group.id %}">See matches for {{ group.name }}!</a>
+        <a href="{% url 'accounts:group_matches' group.id %}">See matches for {{ group.name }}!</a>
         {% endif %}
         <h5>Reviews</h5>
         <ul style="list-style-type: none;">
             {% for review in group.reviews.all %}
             <div style="border: 0.2em solid; padding: 0.2em; margin-top: 2px;">
                 <li>{{review.review}}</li>
-            </div>  
+            </div>
             {% endfor %}
         </ul>
     </div>
@@ -59,17 +59,36 @@
         </div>
         <div style="margin: 1em; width: fit-content;">
             <div>
-                
+
             </div>
             <div class="scroll" style="margin: 1em; width: 200px;">
                 <ul>
                     {% for member in group.members.all %}
-                        <li>{{ member.user.username }}</li>
+                    <li>
+                        <form method="post" id="delete-form">
+                            {% csrf_token %}
+                            <span>{{ member.user.username }}</span>
+                            {% if group in user.groupupuser.get_groups_where_admin %}
+                            <input type="hidden" name="user_id" class="delete-form-user-id" value="{{ member.user.pk }}">
+                            <button type="submit">Remove</button>
+                            {% endif %}
+                        </form>
+                    </li>
                     {% endfor %}
                 </ul>
             </div>
         </div>
     </div>
 </div>
+<script>
+    const deleteForm = document.querySelector("#delete-form");
+    deleteForm.addEventListener("submit", async e => {
+        console.log(e)
+        e.preventDefault();
+        const id = e.target.querySelector(".delete-form-user-id").value;
+        await fetch(`/groups/{{ group.pk }}/remove-member/${id}`);
+        e.target.parent.remove();
+    });
+</script>
 {% block admin_content %}{% endblock %}
 {% endblock %}

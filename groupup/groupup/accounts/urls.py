@@ -9,6 +9,7 @@ urlpatterns = [
     path("login/", views.homepage, name = "index"),
     path("groups/", views.all_groups, name="groups"),
     path("groups/<int:pk>/", views.group_site, name="group_site"),
+    path("groups/<int:pk>/remove-member/<int:user_id>", views.remove_group_member),
     path("groups/<int:pk>/matches", views.group_matches, name="group_matches"),
     path("groups/create/", views.UserGroupCreateView.as_view(), name="group_create"),
     path("profile/invites", views.show_invites, name="invites"),
