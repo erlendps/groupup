@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 app_name = "accounts"
 
@@ -15,3 +16,5 @@ urlpatterns = [
     path("profile/acceptinvite/<int:pk>", views.accept_invite, name="accept_invite"),
     path("profile/declineinvite/<int:pk>", views.decline_invite, name="decline_invite"),
 ]
+
+urlpatterns += staticfiles_urlpatterns()

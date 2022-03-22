@@ -23,26 +23,39 @@
     </head>
 
     <body>
-        <nav class="navbar sticky-top navbar-dark bg-dark">
-            <div>
-                <a class="navbar-brand" style="margin-left: 1.3cm;" href="/">GroupUp</a>
+        <div style="display: flex; flex-direction: column; align-items: center; margin-top: 40px;">
+            {% load static %} <img src="{% static "groupup/img/GroupUp_logo.png" %}" alt="groupuplogo" style="width: 600px; height: 200px; object-fit: scale-down;"/>
+            <div style=" margin-top: 40px; display: flex; flex-direction: column; align-items: center;">
+                <h2 style="margin-bottom: 30px;">Sign up</h2>
+                <div>
+                    <form method="post" enctype="multipart/form-data" style="display: flex; flex-direction: column;">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button class="btn btn-success" type="submit">Submit</button>
+                </form>
+                {{ form.username.errors }}
+                {{ form.password.errors }}
+                {{ form.profile_pic.errors }}
+                {{ form.interests.errors }}
+                {{ form.birthday.errors }}
+                </div>  
             </div>
-        </nav>
-        <div style=" margin-top: 40px; display: flex; flex-direction: column; align-items: center;">
-            <h2 style="margin-bottom: 30px;">Sign up</h2>
-            <div>
-                <form method="post" enctype="multipart/form-data" style="display: flex; flex-direction: column;">
-                {% csrf_token %}
-                {{ form.as_p }}
-                <button class="btn btn-success" type="submit">Submit</button>
-            </form>
-            {{ form.username.errors }}
-            {{ form.password.errors }}
-            {{ form.profile_pic.errors }}
-            {{ form.interests.errors }}
-            {{ form.birthday.errors }}
-            </div>
-            
         </div>
+        <footer class="bg-light text-center mt-auto" style="position: absolute; bottom: 0; right: 0; left: 0">
+            <div class="container p-4">
+              <div class="row">
+                <div class="col-md-1 col-xl-1"></div>
+                <div class="col-md-10 col-xl-10">
+                  <h5 class="text-uppercase">About</h5>
+                  <p>
+                    This is our project in the course TDT4140 "Programvareutvikling". The project uses the django framework
+                    with bootstrap as our frontend framework. All source code is on the groups
+                    <a href="https://gitlab.stud.idi.ntnu.no/tdt4140-2022/landsby-2/gruppe_32/groupup">gitlab.</a>
+                  </p>
+                </div>
+                <div class="col-md-1 col-xl-1"></div>
+              </div>
+            </div>
+          </footer>
     </body>
 </html>
