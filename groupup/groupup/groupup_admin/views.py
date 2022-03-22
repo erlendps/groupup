@@ -1,4 +1,4 @@
-from django.http import Http404, HttpResponseRedirect
+from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from groupup.accounts.models import GroupUpUser, UserGroup, DateAvailable, Interest, Reviews
@@ -243,3 +243,20 @@ def write_review(request, pk):
         form = ReviewForm()
         context = {'form': form}
         return render(request, "groupup_admin/review.html", context)
+
+
+@login_required
+def delete_group(request, pk):
+    group = UserGroup.objects.get(pk=pk)
+    if request.method == "POST":
+        if "delete" in request.POST:
+            if not request.user.groupupuser.is_admin_of(group):
+                messages.warning("You are not administrator for this group!")
+                return redirect("/admin/groups/{0}".format(pk))
+            group.group_pic.delete(save=True)
+            group.delete()
+            return HttpResponseRedirect("/")
+        else:
+            return redirect("/admin/groups/{0}".format(pk))
+    else:
+        return render(request, "groupup_admin/delete_user.html", {"group": group})

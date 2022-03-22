@@ -69,6 +69,7 @@
         </button>
       {% endbuttons %}
   </form>
+  <a href="{% url 'group_admin:delete_group' group.id %}" class="btn btn-danger">Delete Group</a>
   {% endif %}
   </div>
 {% endblock %}

@@ -13,5 +13,6 @@ urlpatterns = [
     path('groups/<int:pk>/add_date', views.add_date, name='add_date'),
     path('groups/<int:pk>/remove_date', views.remove_date, name='remove_date'),
     path('groups/<int:pk>/set_have_met', views.have_met, name='set_met'),
-    path('groups/review/<int:pk>', views.write_review, name='write_review')
+    path('groups/review/<int:pk>', views.write_review, name='write_review'),
+    path('groups/<int:pk>/delete', views.delete_group, name="delete_group")
 ] 
