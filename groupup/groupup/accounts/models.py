@@ -1,4 +1,6 @@
+from xmlrpc.client import DateTime
 from django.db import models
+from django.forms import ValidationError
 from django.utils.timezone import now
 from django.contrib.auth.models import User
 import datetime
@@ -27,6 +29,11 @@ class Interest(models.Model):
     def __str__(self):
         return self.name
 
+
+
+def validate_birthday(value: datetime.date):
+    if (value + relativedelta(years=18) >= datetime.date):
+        raise ValidationError("You are too young.")
 
 class GroupUpUser(models.Model):
     """Represents a user who uses the app

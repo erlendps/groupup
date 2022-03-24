@@ -1,10 +1,18 @@
+import datetime
+import dateutil
 from django import forms
+from dateutil.relativedelta import relativedelta
 from groupup.accounts.models import UserGroup, GroupUpUser
 from .models import Interest
 from .widgets import DatePickerInput
 
 class InterestsWidget(forms.SelectMultiple):
     template_name="widgets/interests_widget.html"
+
+
+def validate_birthday(value: datetime.date):
+    if ((value + relativedelta(years=18)) >= datetime.date.today()):
+        raise forms.ValidationError("You are too young.")
 
 class RegisterForm(forms.Form):
     """Form for creating a new groupupuser"""
@@ -16,7 +24,7 @@ class RegisterForm(forms.Form):
                                     label="interests",
                                     queryset=Interest.objects.all(),
                                     widget=InterestsWidget)
-    birthday = forms.DateField(label="dateofbirth", widget=DatePickerInput)
+    birthday = forms.DateField(label="dateofbirth", widget=DatePickerInput, validators=[validate_birthday])
 
 class GroupCreateForm(forms.ModelForm):
     """A form for creating new groups."""
