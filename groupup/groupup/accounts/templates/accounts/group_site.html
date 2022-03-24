@@ -18,18 +18,23 @@
 </style>
 <div id="main" class="box" style="display: flex; flex-direction: row;">
     <div id="info" class="container" style="margin: 2em; width: fit-content;">
-        <img src="{{ MEDIA_URL }}{{ group.group_pic.url }}" style="width: 800px; height: 300px; object-fit: cover;">
-        <h1>{{ group.name }}</h1>
-        <p>{{ group.description }}</p>
-        <h5>Interests</h5>
-        <ul style="list-style-type:none;">
-            <div>
+        <img src="{{ MEDIA_URL }}{{ group.group_pic.url }}" style="width: 800px; height: 300px; object-fit: cover; border-radius: 1.5em;">
+        <h1 style="margin-top: 20px;">{{ group.name }}</h1>
+        <p style="margin-top: 20px; margin-bottom: 40px;">{{ group.description }}</p>
+        <h5 style="margin-bottom: 20px;">Interests</h5>
+        <ul style="list-style-type: none; padding: 0;">
+            <div style="display:flex; flex-direction:row;">
                 {% for interest in group.interests.all %}
-                <li>{{ interest.name }}</li>
+                <li>
+                    <div style="border: 0.1em solid; border-radius: 1em; width: fit-content; padding: 5px; padding-left: 15px; padding-right: 15px; margin-right: 10px;;">
+                        {{ interest.name }}
+                    </div>
+                    
+                </li>
                 {% endfor %}
             </div>
         </ul>
-        <h5>Available on:</h5>
+        <h5 style="margin-top: 40px;">Available on:</h5>
         <p>
             {% if group.connected_group.all %}
             {% for date in group.connected_group.all %}
@@ -40,7 +45,7 @@
             {% endif %}
         </p>
         {% if group in user.groupupuser.get_groups %}
-        <a href="{% url 'accounts:group_matches' group.id %}">See matches for {{ group.name }}!</a>
+        <a class="btn btn-outline-success" href="{% url 'accounts:group_matches' group.id %}">See matches for {{ group.name }}!</a>
         {% endif %}
         {% if group.reviews.all %}
         <h5 style="margin-bottom: -.5em">Reviews</h5>

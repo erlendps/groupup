@@ -8,8 +8,8 @@
     <div class="col-md-1 col-xl-1"></div>
     <div class="col-md-10 col-xl-10">
       <h1 style="text-align: center; margin-top: 10px;">Admin site</h1>
-      <h2 style="text-align: center; margin-top: 10px;">Your groups</h2>
-      <div class="d-flex flex-wrap justify-content-between" style="gap: 10px;">
+      <h2 style="text-align: center; margin-top: 30px; margin-bottom: 40px;">Your groups</h2>
+      <div class="d-flex flex-wrap justify-content-around" style="gap: 10px;">
       {% for group in groups %}
         <div class="group-item">
           <a class="text-decoration-none" style="color: inherit;" href="{% block group_links %}{% url 'group_admin:group_browsing' group.id %}{% endblock %}">
@@ -26,19 +26,19 @@
         </div>
       {% endfor %}
       </div>
-      <h3 style="text-align: center;">Group Browsing</h3>
-      <p style="text-align: center;">Find other groups and potential matches <a href="{% url 'group_admin:groups' %}">here</a>!
+      <h3 style="text-align: center; margin-top: 40px; ">Group Browsing</h3>
+      <p style="text-align: center; font-size: large;">Find other groups and potential matches <a href="{% url 'group_admin:groups' %}">here</a>!
     </div>
     <div class="col-md-1 col-xl-1"></div>
   </div>
   <div class="row">
     <div class="col-md-1 col-xl-1"></div>
     <div class="col-md-10 col-xl-10">
-      <h2 style="text-align: center; margin-top: 10px;">Match requests</h2>
+      <h2 style="text-align: center; margin-top: 10px; margin-bottom: 20px;">Match requests</h2>
       <ul class="d-flex flex-wrap justify-content-center" style="list-style-type: none; padding: 0; gap: 20px;">
         {% for group in groups %}
         <li>
-          <a class="text-decoration-none" href="{% url 'group_admin:view_match' group.id %}">
+          <a class="btn btn-outline-success" href="{% url 'group_admin:view_match' group.id %}">
             Match requests for {{ group.name }}
           </a>
         </li> 
