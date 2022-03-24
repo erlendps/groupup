@@ -35,7 +35,7 @@
             </div>
         </ul>
         <h5 style="margin-top: 40px;">Available on:</h5>
-        <p>
+        <p style="margin-bottom: 40px;">
             {% if group.connected_group.all %}
             {% for date in group.connected_group.all %}
             {{ date.date }}
@@ -48,14 +48,13 @@
         <a class="btn btn-outline-success" href="{% url 'accounts:group_matches' group.id %}">See matches for {{ group.name }}!</a>
         {% endif %}
         {% if group.reviews.all %}
-        <h5 style="margin-bottom: -.5em">Reviews</h5>
+        <h5 style="margin-bottom: 10px">Reviews</h5>
         <ul style="list-style-type: none; margin: 0; padding: 0;">
             {% for review in group.get_reviews %}
             <li>
-                <div
-                    style="border: 0.2em solid black; padding: 0.2em; margin-top: 1em; border-radius: .3em; display: flex; justify-content: space-between;">
-                    <p style="margin: 0; padding: 0;">{{ review.review }}</p>
-                    <p style="margin: 0; padding: 0 0 0 .2em; border-left: 2px solid black;">{{ review.date_published }}
+                <div style="border: 0.1em solid black; margin-top: 0.5em; border-radius: .3em; display: flex; justify-content: space-between;">
+                    <p style="margin: 0; padding: 1em;">{{ review.review }}</p>
+                    <p style="margin: 0; padding: 1em; border-left: 0.1em solid black;">{{ review.date_published }}
                     </p>
                 </div>
             </li>
