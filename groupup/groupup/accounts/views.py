@@ -3,7 +3,7 @@ from posixpath import split
 from django.shortcuts import render
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.edit import FormView
-from django.http import Http404, HttpResponseRedirect
+from django.http import Http404, HttpResponse, HttpResponseRedirect
 from .models import Interest, UserGroup
 from django.contrib.auth.decorators import login_required
 from django.forms import ValidationError
@@ -94,7 +94,16 @@ def group_site(request, pk):
     context = {"group": group}
     return render(request, "accounts/group_site.html", context)
 
+@login_required
+def remove_group_member(request, pk, user_id):
+    group = UserGroup.objects.get(pk=pk)
+    if group not in request.user.groupupuser.get_groups_where_admin():
+        return HttpResponse('Unauthorized', status=401)
     
+    user_to_delete = User.objects.get(pk=user_id)
+    group.members.remove(user_to_delete.groupupuser)
+    group.save()
+
 
 @login_required
 def group_matches(request, pk):
