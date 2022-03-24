@@ -49,8 +49,7 @@
             {% endif %}
         </p>
         {% if group in user.groupupuser.get_groups %}
-        <a class="btn btn-outline-success" href="{% url 'accounts:group_matches' group.id %}">See matches for {{
-            group.name }}!</a>
+        <a class="btn btn-outline-success" href="{% url 'accounts:group_matches' group.id %}">See matches for {{ group.name }}!</a>
         {% endif %}
         {% if group in user.groupupuser.get_groups_where_admin %}
         <p>
