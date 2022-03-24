@@ -39,28 +39,29 @@
         </div>
 
         <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
-          <div class="offcanvas-header">
-            <h5 class="offcanvas-title" id="offcanvasNavbarLabel">GroupUp</h5>
+          <div class="offcanvas-header" style="padding-bottom: 0;">
+            <h4 class="offcanvas-title" id="offcanvasNavbarLabel"> {% load static %} <img src="{% static "groupup/img/favicon.ico" %}" alt="groupuplogo" style="width: 50px; height: 35px; object-fit: scale-down; margin-left: 20px;"> GroupUp</h4>
             <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
           </div>
+          <hr>
           <div class="offcanvas-body">
-            <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+            <ul class="navbar-nav justify-content-end flex-grow-1 pe-3" style="padding-left: 15px;">
               <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="/" style="color: black;">Home</a>
+                <a class="nav-link active" aria-current="page" href="/" style="color: black; font-size: 22px; margin-bottom: 10px;">Home</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="{% url 'accounts:groups' %}" style="color: black;">Groups</a>
+                <a class="nav-link active" aria-current="page" href="{% url 'accounts:groups' %}" style="color: black; font-size: 22px; margin-bottom: 10px;">Groups</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="{% url 'accounts:invites' %}" style="color: black;">Profile</a>
+                <a class="nav-link active" aria-current="page" href="{% url 'accounts:invites' %}" style="color: black; font-size: 22px; margin-bottom: 10px;">Profile</a>
               </li>
               {% if user.groupupuser.is_a_group_admin %}
                 <li class="nav-item">
-                  <a class="nav-link active" aria-current="page" href="{% url 'group_admin:admin_index' %}" style="color: black;">Admin</a>
+                  <a class="nav-link active" aria-current="page" href="{% url 'group_admin:admin_index' %}" style="color: black; font-size: 22px; margin-bottom: 10px;">Admin</a>
                 </li>
               {% endif %}
               <li>
-                <a class="btn btn-danger" href="{% url 'logout' %}">Logout</a>
+                <a class="btn btn-danger" href="{% url 'logout' %}" style="margin-top: 450px; padding: 10px 140px">Logout</a>
               </li>
             </ul>
           </div>
