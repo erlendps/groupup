@@ -10,6 +10,8 @@ from django.contrib.auth.decorators import login_required
 from django.forms import ValidationError
 from .models import GroupUpUser, UserGroup
 from .forms import RegisterForm, GroupCreateForm
+from groupup.groupup_admin.forms import InviteUserForm, AddAvailableDateForm, RemoveDate
+from django.contrib import messages
 from django.contrib.auth.models import User
 from groupup.groupup_admin.models import Invite
 from django.db.models.functions import Lower
@@ -92,7 +94,42 @@ def group_site(request, pk):
     """Renders the group site of the group with primary key pk."""
 
     group = UserGroup.objects.get(pk=pk)
-    context = {"group": group}
+
+    request.session["pp_groupbrowsing"] = True
+    request.session["group_pk"] = pk
+
+    # form handling
+    if request.method == "POST":
+        invite_form = InviteUserForm(request.POST)
+        if invite_form.is_valid():
+            user = None
+            try:
+                user = GroupUpUser.objects.get(user=User.objects.get(username=invite_form.cleaned_data.get("username")))
+                if user.is_member_of_group(group):
+                    messages.warning(request, "User already a member")
+                elif user.has_pending_invite(group):
+                    messages.warning(request, "Already invited user")
+                else:
+                    invite = Invite.objects.create(group=group, receiver=user)
+                    invite.save()
+                    messages.success(request, "Successfully invited the user!")
+
+            except:
+                messages.warning(request, "User does not exist.")
+            invite_form = InviteUserForm()
+            return HttpResponseRedirect(request.path)
+    else:
+        invite_form = InviteUserForm()
+    add_date = AddAvailableDateForm()
+    remove_date = RemoveDate(group)
+
+    context = {
+        "group": group,
+        "invite_form": invite_form,
+        "add_date": add_date,
+        "remove_date": remove_date,
+    }
+    #context = {"group": group}
     return render(request, "accounts/group_site.html", context)
 
 @login_required
