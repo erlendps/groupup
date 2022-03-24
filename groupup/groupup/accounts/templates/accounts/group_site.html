@@ -110,18 +110,18 @@
                 {% endfor %}
             </ul>
             {% block invite_user %}
-            {% if group in user.groupupuser.get_groups_where_admin %}
-            <h2>Invite users</h2>
-            <form method="post">
-                {% csrf_token %}
-                {% bootstrap_form invite_form %}
-                {% buttons %}
-                <button type="submit" class="btn btn-primary">
-                    Invite!
-                </button>
-                {% endbuttons %}
-            </form>
-            {% endif %}
+                {% if group in user.groupupuser.get_groups_where_admin %}
+                    <h2>Invite users</h2>
+                    <form method="post">
+                        {% csrf_token %}
+                        {% bootstrap_form invite_form %}
+                        {% buttons %}
+                            <button type="submit" name="invite_user" class="btn btn-primary">
+                            Invite!
+                            </button>
+                        {% endbuttons %}
+                    </form>
+                {% endif %}
             {% endblock %}
 
         </div>

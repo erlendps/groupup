@@ -102,7 +102,7 @@ def group_site(request, pk):
     request.session["group_pk"] = pk
 
     # form handling
-    if request.method == "POST":
+    if request.method == "POST" and "invite_user" in request.POST:
         invite_form = InviteUserForm(request.POST)
         if invite_form.is_valid():
             user = None
