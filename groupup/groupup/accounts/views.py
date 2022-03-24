@@ -13,7 +13,7 @@ from .forms import RegisterForm, GroupCreateForm
 from django.contrib.auth.models import User
 from groupup.groupup_admin.models import Invite
 from django.db.models.functions import Lower
-
+from django.contrib.auth import authenticate, login
 
 def homepage(request):
     """Renders the homepage for the user."""
@@ -63,7 +63,10 @@ def register(request):
                 groupupuser.interests.add(interest.id)
             groupupuser.save()
 
-            return HttpResponseRedirect('/')
+            authenticate(username=form.cleaned_data['username'],
+                password=form.cleaned_data['password'])
+            login(request, user)
+            return HttpResponseRedirect(reverse('accounts:homepage'))
 
     else:
         form = RegisterForm()
