@@ -55,8 +55,15 @@ button.dropdown-option.filtered {
     display: none;
 }
 
+.form-select-flyout.active .form-select-container {
+
+}
+
 .form-select-flyout.active .form-select-items {
+    position: fixed;
+    width: 320px;
     display: block;
+    background-color: white;
 }
 
 .selected-items button.dropdown-option {

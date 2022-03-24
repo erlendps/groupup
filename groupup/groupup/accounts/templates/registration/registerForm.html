@@ -30,7 +30,7 @@
                 <div>
                     <form method="post" enctype="multipart/form-data" style="display: flex; flex-direction: column;">
                     {% csrf_token %}
-                    {{ form.as_p }}
+                    {% bootstrap_form form %}
                     <button class="btn btn-success" type="submit">Submit</button>
                 </form>
                 {{ form.username.errors }}
