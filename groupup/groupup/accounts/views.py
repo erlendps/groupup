@@ -102,7 +102,10 @@ def remove_group_member(request, pk, user_id):
         return HttpResponse('Unauthorized', status=401)
     
     user_to_delete = User.objects.get(pk=user_id)
-    group.members.remove(user_to_delete.groupupuser)
+    if user_to_delete == request.user.groupupuser:
+        return HttpResponse("Can not remove one self from the group.")
+        
+    group.remove_member(user_to_delete.groupupuser)
     group.save()
 
 

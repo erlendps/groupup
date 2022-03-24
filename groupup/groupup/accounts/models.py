@@ -221,6 +221,12 @@ class UserGroup(models.Model):
         """Returns the absolute url for this group's site"""
 
         return reverse('accounts:group_site', kwargs={'pk': self.pk})
+
+    def remove_member(self, member: GroupUpUser):
+        if member == self.group_admin:
+            raise ValueError("Can not remove the group admin from the group.")
+
+        self.members.remove(member)
         
     
     def __str__(self):
