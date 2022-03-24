@@ -1,4 +1,6 @@
 {% extends 'accounts/base.html' %}
+{% load bootstrap5 %}
+
 
 {% block content %}
 <style>
@@ -46,6 +48,13 @@
         </p>
         {% if group in user.groupupuser.get_groups %}
         <a class="btn btn-outline-success" href="{% url 'accounts:group_matches' group.id %}">See matches for {{ group.name }}!</a>
+        {% endif %}
+        {% if group in user.groupupuser.get_groups_where_admin %}
+            <p>
+                <a class="btn btn-outline-success" style="margin-top:1em;" href="{% url 'group_admin:view_match' group.id %}">
+                    See match requests for {{ group.name }}
+                </a>
+            </p>
         {% endif %}
         {% if group.reviews.all %}
         <h5 style="margin-bottom: 10px">Reviews</h5>
@@ -95,6 +104,21 @@
                 </li>
                 {% endfor %}
             </ul>
+            {% block invite_user %}
+                {% if group in user.groupupuser.get_groups_where_admin %}
+                    <h2>Invite users</h2>
+                    <form method="post">
+                        {% csrf_token %}
+                        {% bootstrap_form invite_form %}
+                        {% buttons %}
+                            <button type="submit" class="btn btn-primary">
+                            Invite!
+                            </button>
+                        {% endbuttons %}
+                    </form>
+                {% endif %}
+            {% endblock %}
+            
         </div>
     </div>
 </div>
@@ -108,5 +132,61 @@
         e.target.parent.remove();
     });
 </script>
-{% block admin_content %}{% endblock %}
+{% block admin_content %}
+{% if user.groupupuser.is_a_group_admin %}
+<div class="container" style="margin: 0 2em 2em 2em;">
+    {% if group in user.groupupuser.get_groups_where_admin %}
+    <h2>Add or remove available dates</h2>
+        <form action="{% url 'group_admin:add_date' group.id %}" method="post">
+            {% csrf_token %}
+            {% bootstrap_form add_date %}
+            {% buttons %}
+                <button type="submit" class="btn btn-primary admin-buttons">
+                Add
+                </button>
+            {% endbuttons %}
+        {{ add_date.non_field_errors }}
+        </form>
+        <form action="{% url 'group_admin:remove_date' group.id %}" method="post">
+            {% csrf_token %}
+            {{ remove_date }}
+            {% buttons %}
+                <button type="submit" class="btn btn-primary admin-buttons" style="margin: 1em 0;">
+                Remove
+                </button>
+            {% endbuttons %}
+        </form>
+        <a href="{% url 'group_admin:delete_group' group.id %}" class="btn btn-danger">Delete Group</a>
+    {% else %}
+    <div style="display: flex; flex-direction: column; gap: 1rem;">
+        {% if group.connected_group.all %}
+        <h2>Wanna match?</h2>
+        {% for usergroup in user.groupupuser.get_groups_where_admin %}
+            {% if group not in usergroup.get_related_groups %}
+                <div>
+                    <a class="btn btn-primary" href="{% url 'group_admin:send_match' usergroup.id %}" style="width: 40%; word-break; break-word;">
+                    Send match request on behalf of {{ usergroup.name }}
+                    </a>
+                </div>
+            {% endif %}
+        {% endfor %}
+        {% endif %}
+
+        {% if group in user.groupupuser.confirmed_groups_where_admin %}
+            <h2>Have you met this group?</h2>
+        {% endif %}
+        {% for usergroup in user.groupupuser.get_groups_where_admin %}
+            {% if group in usergroup.get_confirmed_groups %}
+                <div>
+                    <a href="{% url 'group_admin:set_met' usergroup.id %}" class="btn btn-primary" style="width: 40%;">
+                    {{ usergroup.name }} have met this group
+                    </a>
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+{% endif %}
+{% endblock %}
 {% endblock %}

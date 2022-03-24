@@ -1,94 +1,10 @@
-from django.http import Http404, HttpResponse, HttpResponseRedirect
+from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from groupup.accounts.models import GroupUpUser, UserGroup, DateAvailable, Interest, Reviews
-from .models import Matches, Invite
-from .forms import HandleRequestForm, InviteUserForm, AddAvailableDateForm, RemoveDate, ReviewForm
-from django.contrib.auth.models import User
+from groupup.accounts.models import UserGroup, DateAvailable, Interest, Reviews
+from .models import Matches
+from .forms import HandleRequestForm, AddAvailableDateForm, RemoveDate, ReviewForm
 from django.contrib import messages
-from django.db.models.functions import Lower
-
-
-
-@login_required
-def admin_index(request):
-    """Renders a page with all the groups the user is admin of."""
-
-    if not request.user.groupupuser.is_a_group_admin():
-        raise Http404
-
-    groups = request.user.groupupuser.get_groups_where_admin()
-    context = {"groups": groups}
-    return render(request, "groupup_admin/admin_index.html", context)
-
-
-@login_required
-def all_groups(request):
-    """Renders a page with all groups."""
-
-    if not request.user.groupupuser.is_a_group_admin():
-        raise Http404
-
-    allInterests = list(Interest.objects.all().order_by(Lower('name'), 'pk'))
-    filteredInterests = request.GET.get("interests")
-
-    groups = list(UserGroup.objects.all().order_by(Lower('name'), 'pk'))
-    result = []
-    if filteredInterests is None or len(filteredInterests) == 0:
-        result = groups
-    else:
-        for group in groups:
-            if set(filteredInterests).issubset(set([str(x.pk) for x in group.interests.all()])):
-                result.append(group)
-    return render(request, "groupup_admin/all_groups.html", {"groups": result, "interests": allInterests})
-
-
-@login_required
-def group_browsing(request, pk):
-    """View for group site that has some extra functionality for the admin.
-    
-    Sets some cookies based on the site and also handles the invite user.
-    """
-
-    if not request.user.groupupuser.is_a_group_admin():
-        return redirect("/groups/{0}".format(pk))
-    request.session["pp_groupbrowsing"] = True
-    request.session["group_pk"] = pk
-    group = UserGroup.objects.get(pk=pk)
-
-    # form handling
-    if request.method == "POST":
-        invite_form = InviteUserForm(request.POST)
-        if invite_form.is_valid():
-            user = None
-            try:
-                user = GroupUpUser.objects.get(user=User.objects.get(username=invite_form.cleaned_data.get("username")))
-                if user.is_member_of_group(group):
-                    messages.warning(request, "User already a member")
-                elif user.has_pending_invite(group):
-                    messages.warning(request, "Already invited user")
-                else:
-                    invite = Invite.objects.create(group=group, receiver=user)
-                    invite.save()
-                    messages.success(request, "Successfully invited the user!")
-
-            except:
-                messages.warning(request, "User does not exist.")
-            invite_form = InviteUserForm()
-            return HttpResponseRedirect(request.path)
-    else:
-        invite_form = InviteUserForm()
-    add_date = AddAvailableDateForm()
-    remove_date = RemoveDate(group)
-
-    context = {
-        "group": group,
-        "invite_form": invite_form,
-        "add_date": add_date,
-        "remove_date": remove_date,
-    }
-    return render(request, "groupup_admin/group_site_admin.html", context)
-
 
 @login_required
 def send_match_request(request, pk):
@@ -122,7 +38,7 @@ def send_match_request(request, pk):
         # give feedback
         messages.success(request, "Sent a match request!")
         del request.session["pp_groupbrowsing"]
-        return redirect("/admin/groups/{0}".format(receiver_group.id))
+        return redirect("/groups/{0}".format(receiver_group.id))
     else:
         raise Http404
 
@@ -192,14 +108,17 @@ def add_date(request, pk):
             group = UserGroup.objects.get(pk=pk)
             date = add_date_form.cleaned_data['date']
             if len(DateAvailable.objects.filter(group=group, date=date))!=0:
-                return redirect("/admin/groups/{0}".format(pk))
+                return redirect("/groups/{0}".format(pk))
             date_available = DateAvailable(group=group, date=date)
             date_available.save()
-            return HttpResponseRedirect("/admin/groups/{0}".format(pk))
+            #return HttpResponseRedirect("/admin/groups/{0}".format(pk))
+            return HttpResponseRedirect("/groups/{0}".format(pk))
         else:
-            return redirect("/admin/groups/{0}".format(pk))
+            #return redirect("/admin/groups/{0}".format(pk))
+            return redirect("/groups/{0}".format(pk))
     else:
-        return redirect("/admin/groups/{0}".format(pk))
+        #return redirect("/admin/groups/{0}".format(pk))
+        return redirect("/groups/{0}".format(pk))
 
 @login_required
 def remove_date(request, pk):
@@ -212,9 +131,11 @@ def remove_date(request, pk):
             group = UserGroup.objects.get(pk=pk)
             date = remove_date_form.cleaned_data['date']
             date.delete()
-            return HttpResponseRedirect("/admin/groups/{0}".format(pk))
+            #return HttpResponseRedirect("/admin/groups/{0}".format(pk))
+            return HttpResponseRedirect("/groups/{0}".format(pk))
     else:
-        return redirect("/admin/groups/{0}".format(pk))
+        #return redirect("/admin/groups/{0}".format(pk))
+        return redirect("/groups/{0}".format(pk))
 
 @login_required
 def have_met(request, pk):
@@ -224,7 +145,7 @@ def have_met(request, pk):
     match = list(Matches.objects.filter(receiver=users_group, requestor=group, have_met=False)) + list(Matches.objects.filter(receiver=group, requestor=users_group, have_met=False))
     print(match)
     if len(match) == 0 or len(match) > 1:
-        return redirect("/admin/groups/{0}".format(pk))
+        return redirect("/groups/{0}".format(pk))
     match = match[0]
     match.have_met = True
     match.save()
@@ -238,7 +159,7 @@ def write_review(request, pk):
             group = UserGroup.objects.get(pk=pk)
             review = Reviews.objects.create(group=group, review=review_form.cleaned_data["review"])
             review.save()
-            return HttpResponseRedirect("/admin/groups/{0}".format(pk))
+            return HttpResponseRedirect("/groups/{0}".format(pk))
     else:
         form = ReviewForm()
         context = {'form': form}

@@ -55,11 +55,6 @@
               <li class="nav-item">
                 <a class="nav-link active" aria-current="page" href="{% url 'accounts:invites' %}" style="color: black; font-size: 22px; margin-bottom: 10px;">Profile</a>
               </li>
-              {% if user.groupupuser.is_a_group_admin %}
-                <li class="nav-item">
-                  <a class="nav-link active" aria-current="page" href="{% url 'group_admin:admin_index' %}" style="color: black; font-size: 22px; margin-bottom: 10px;">Admin</a>
-                </li>
-              {% endif %}
               <li>
                 <a class="btn btn-danger" href="{% url 'logout' %}" style="margin-top: 450px; padding: 10px 140px">Logout</a>
               </li>
