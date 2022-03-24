@@ -64,6 +64,8 @@ button.dropdown-option.filtered {
     width: 320px;
     display: block;
     background-color: white;
+    max-height: 15vh;
+    overflow-y: auto;
 }
 
 .selected-items button.dropdown-option {

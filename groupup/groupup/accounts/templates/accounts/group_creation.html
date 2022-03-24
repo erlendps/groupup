@@ -1,17 +1,14 @@
 {% extends 'accounts/base.html' %}
+{% load bootstrap5 %}
 {% block content %}
-    <div style=" margin-top: 40px; display: flex; flex-direction: column; align-items: center;">
-        <h2 style="margin-bottom: 30px;">Create Group</h2>
-        <div>
-            <form method="post" enctype="multipart/form-data" style="display: flex; flex-direction: column;">
+<div style=" margin-top: 40px; display: flex; flex-direction: column; align-items: center;">
+    <h2 style="margin-bottom: 30px;">Create Group</h2>
+    <div>
+        <form method="post" enctype="multipart/form-data" style="display: flex; flex-direction: column;">
             {% csrf_token %}
-            {{ form.as_p }}
+            {% bootstrap_form form %}
             <button class="btn btn-success" type="submit">Submit</button>
         </form>
-        {{ form.name.errors }}
-        {{ form.description.errors }}
-        {{ form.group_pic.errors }}
-        {{ form.interests.errors }}
-        </div>
     </div>
+</div>
 {% endblock %}
