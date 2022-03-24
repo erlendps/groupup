@@ -29,20 +29,13 @@
     {% if user.is_authenticated %}
     <nav class="navbar sticky-top navbar-dark bg-dark">
       <div class="container" style="margin-left: 0cm; justify-content: left;" >
-        <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
+        <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" style="margin-left: 20px;">
           <span class="navbar-toggler-icon"> </span>
         </button>
-        <a class="navbar-brand" style="margin-left: 0.3cm;" href="/">GroupUp</a>
-        <ul class="navbar-nav" style="margin-left: auto; display: flex; flex-direction: row; gap: 10px;">
-          <li style="align-self: center;">
-            <a class="btn btn-success" href="{% url 'accounts:group_create' %}">+ Group</a>
-          </li>
-          <li>
-            <a class="nav-link" href="{% url 'accounts:invites' %}">
-              <img class="profile-pic" src="{{ MEDIA_URL }}{{ user.groupupuser.profile_pic.url }}">
-            </a>
-          </li>
-        </ul>
+        <a class="navbar-brand" href="/"> {% load static %} <img src="{% static "groupup/img/favicon.ico" %}" alt="groupuplogo" style="width: 50px; height: 35px; object-fit: scale-down; margin-left: 20px;"/>GroupUp</a>
+        <a class="nav-link" href="{% url 'accounts:invites' %}">
+          <img class="profile-pic" src="{{ MEDIA_URL }}{{ user.groupupuser.profile_pic.url }}" style="margin-left: 980px;">
+        </a>
         </div>
 
         <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
@@ -79,24 +72,6 @@
     {% else %}
      
       {% block login %}
-      <div>
-        
-      </div>
-      <nav class="navbar sticky-top navbar-dark bg-dark">
-        <div>
-          <a class="navbar-brand" style="margin-left: 1.3cm;" href="/">GroupUp</a>
-        </div>
-      </nav>
-      <div style= "display: flex; justify-content: center; padding-top: 40px;">
-        <div style="display: flex; flex-direction: column;">
-          <h3>You are not logged in</h3>
-          <div style= "margin-top: 40px; display: flex; flex-direction: column; align-items: center;">
-            <a class="btn btn-success" style="padding-left: 20px; padding-right: 20px;" href="{% url 'login' %}">Log In</a>
-            <a style= "margin-top: 10px;" class= "btn btn-link" href="{% url 'accounts:register' %}">Register New User</a>
-          </div>
-        </div>
-      </div>
-      
       {% endblock %}
       {% block register %}
       {% endblock %}

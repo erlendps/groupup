@@ -1,7 +1,8 @@
 from numbers import Number
 from posixpath import split
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.urls import reverse
 from django.views.generic.edit import FormView
 from django.http import Http404, HttpResponse, HttpResponseRedirect
 from .models import Interest, UserGroup
@@ -23,7 +24,7 @@ def homepage(request):
         return render(request, "accounts/home.html", context)
 
     except AttributeError:
-        return render(request, "accounts/home.html")
+        return redirect(reverse("login"))
 
 class UserGroupCreateView(LoginRequiredMixin, FormView):
     """View for creating new groups."""
