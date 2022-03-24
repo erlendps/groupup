@@ -76,11 +76,12 @@
 </style>
 
 <div class="container mb-4">
-  <a class="btn btn-success" href="{% url 'accounts:group_create' %}" style="margin-left: 1000px;">+ Group</a>
   <h1 style="text-align: center; margin-top: 10px;">All Groups</h1>
+  
   <div class="row mb-4">
-    <div class="col-md-1 col-xl-1"></div>
-    <div class="col-md-10 col-xl-10">
+    <div class="col-md-1 col-xl-1">
+    </div>
+    <div class="col-md-10 col-xl-10" style="display: flex; flex-direction: row;">
       <div class="checkbox-dropdown">
         Filter on interest
         <ul class="checkbox-dropdown-list">
@@ -92,12 +93,13 @@
           {% endfor %}
         </ul>
       </div>
+      <a class="btn btn-success" href="{% url 'accounts:group_create' %}" style="margin-left: 20px;">+ Create new group</a>
     </div>
   </div>
   <div class="row">
     <div class="col-md-1 col-xl-1"></div>
     <div class="col-md-10 col-xl-10">
-      <div class="d-flex flex-wrap justify-content-between" style="gap: 10px;">
+      <div class="d-flex flex-wrap justify-content-around" style="gap: 10px;">
       {% for group in groups %}
         <div class="group-item">
           <a class="text-decoration-none" style="color: inherit;" href="{% block group_links %}{% url 'accounts:group_site' group.id %}{% endblock %}">
