@@ -56,6 +56,7 @@
 
   .is-active .checkbox-dropdown-list {
     opacity: 1;
+    z-index: 100;
     /* display the dropdown */
     pointer-events: auto;
     /* make sure that the user still can select checkboxes */
@@ -72,6 +73,17 @@
   .checkbox-dropdown-list li label:hover {
     background-color: #555;
     color: white;
+  }
+
+  .dismiss-overlay.is-active {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 1;
   }
 </style>
 
@@ -121,6 +133,8 @@
   </div>
 </div>
 
+<div class="dismiss-overlay"></div>
+
 <script>
   const searchParams = new URLSearchParams(window.location.search);
   const originalCheckedItems = (searchParams.get("interests") ?? "")
@@ -129,9 +143,16 @@
   Array.from(document.querySelectorAll(".checkbox-dropdown-list input[type=checkbox]"))
     .forEach(i => i.checked = originalCheckedItems.indexOf(i.value) >= 0);
 
+  const dismissOverlay = document.querySelector(".dismiss-overlay");
+  dismissOverlay.addEventListener('click', e => {
+    document.querySelector(".checkbox-dropdown").classList.remove("is-active");
+    e.currentTarget.classList.remove("is-active");
+  });
+
   document.querySelector(".checkbox-dropdown").addEventListener("click", e => {
     e.stopPropagation();
     e.currentTarget.classList.toggle("is-active");
+    dismissOverlay.classList.toggle("is-active");
     const searchParams = new URLSearchParams(window.location.search);
     const checkedItems = Array.from(
       document.querySelectorAll(".checkbox-dropdown-list input[type=checkbox]"))
