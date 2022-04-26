@@ -1,0 +1,85 @@
+select.form-select {
+    display: none;
+}
+
+button.dropdown-option {
+    border: none;
+    background: transparent;
+    display: block;
+    padding: 0.375rem 2.25rem 0.375rem 0.75rem;
+    z-index: 99999;
+    text-align: left;
+    display: block;
+    width: 100%;
+    align-items: center;
+}
+
+button.dropdown-option span.icon {
+    margin: 0 -2px 0 4px;
+    height: 16px;
+    display: none;
+}
+
+button.dropdown-option.filtered {
+    display: none;
+}
+
+.form-select-dismiss-overlay {
+    display: none;
+}
+
+.form-select-flyout.active .form-select-dismiss-overlay {
+    display: block;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.form-select-container {
+    z-index: 999;
+    position: relative;
+    border: 1px solid #dee2e6;
+    border-radius: 0.25rem;
+}
+
+.form-select-container input {
+    display: block;
+    width: 100%;
+}
+
+.form-select-items {
+    display: none;
+}
+
+.form-select-flyout.active .form-select-container {
+
+}
+
+.form-select-flyout.active .form-select-items {
+    position: fixed;
+    width: 320px;
+    display: block;
+    background-color: white;
+    max-height: 15vh;
+    overflow-y: auto;
+}
+
+.selected-items button.dropdown-option {
+    background: #057642;
+    margin: 4px 8px 4px 0;
+    padding: 8px 12px;
+    border-radius: 1.99rem;
+    color: white;
+    line-height: 1;
+    display: inline-flex;
+    font-weight: 600;
+    width: unset;
+}
+
+.selected-items button.dropdown-option span.icon {
+    display: flex;
+}

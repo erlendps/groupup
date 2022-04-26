@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    {# Load the tag library #}
+    {% load bootstrap5 %}
+
+    {# Load CSS and JavaScript #}
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+
+    {# Display django.contrib.messages as Bootstrap alerts #}
+    {% bootstrap_messages %}
+    
+    {% load static %}
+    
+    {# Interests widget #}
+    <link rel="stylesheet" type="text/css" href="{% static 'groupup/css/interests_widget.css' %}">
+    <script src='{% static "groupup/js/interests_widget.js" %}'></script>
+
+    <title>{% block title %}{% endblock%}</title>
+
+    <link rel="stylesheet" type="text/css" href="{% static 'groupup/css/filters.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'groupup/css/styles.css' %}">
+    <link rel="shortcut icon" href="{% static 'groupup/img/favicon.ico' %}">
+  </head>
+  <body class="d-flex flex-column min-vh-100">
+    {% if user.is_authenticated %}
+    <nav class="navbar sticky-top navbar-dark bg-dark">
+      <div class="container" style="margin-left: 0cm; justify-content: left;" >
+        <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" style="margin-left: 20px;">
+          <span class="navbar-toggler-icon"> </span>
+        </button>
+        <a class="navbar-brand" href="/"> {% load static %} <img src="{% static "groupup/img/favicon.ico" %}" alt="groupuplogo" style="width: 50px; height: 35px; object-fit: scale-down; margin-left: 20px;"/>GroupUp</a>
+        <a class="nav-link" href="{% url 'accounts:invites' %}">
+          <img class="profile-pic" src="{{ MEDIA_URL }}{{ user.groupupuser.profile_pic.url }}" style="margin-left: 980px;">
+        </a>
+        </div>
+
+        <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+          <div class="offcanvas-header" style="padding-bottom: 0;">
+            <h4 class="offcanvas-title" id="offcanvasNavbarLabel"> {% load static %} <img src="{% static "groupup/img/favicon.ico" %}" alt="groupuplogo" style="width: 50px; height: 35px; object-fit: scale-down; margin-left: 20px;"> GroupUp</h4>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+          </div>
+          <hr>
+          <div class="offcanvas-body">
+            <ul class="navbar-nav justify-content-end flex-grow-1 pe-3" style="padding-left: 15px;">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="/" style="color: black; font-size: 22px; margin-bottom: 10px;">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="{% url 'accounts:groups' %}" style="color: black; font-size: 22px; margin-bottom: 10px;">Groups</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="{% url 'accounts:invites' %}" style="color: black; font-size: 22px; margin-bottom: 10px;">Profile</a>
+              </li>
+              <li>
+                <a class="btn btn-danger" href="{% url 'logout' %}" style="margin-top: 450px; padding: 10px 140px">Logout</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </nav>
+    {% block content %}
+    {% endblock %}
+    {% else %}
+     
+      {% block login %}
+      {% endblock %}
+      {% block register %}
+      {% endblock %}
+    {% endif %}
+    <footer class="bg-light text-center mt-auto">
+      <div class="container p-4">
+        <div class="row">
+          <div class="col-md-1 col-xl-1"></div>
+          <div class="col-md-10 col-xl-10">
+            <h5 class="text-uppercase">About</h5>
+            <p>
+              This is our project in the course TDT4140 "Programvareutvikling". The project uses the django framework
+              with bootstrap as our frontend framework. All source code is on the groups
+              <a href="https://gitlab.stud.idi.ntnu.no/tdt4140-2022/landsby-2/gruppe_32/groupup">gitlab.</a>
+            </p>
+          </div>
+          <div class="col-md-1 col-xl-1"></div>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

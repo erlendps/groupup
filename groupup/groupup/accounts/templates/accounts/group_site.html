@@ -1,0 +1,200 @@
+{% extends 'accounts/base.html' %}
+{% load bootstrap5 %}
+
+
+{% block content %}
+<style>
+    #sidepanel {
+        background-color: #006A6E;
+        width: 500px;
+        height: 500px;
+        border-radius: 25px;
+    }
+
+    div.scroll {
+        height: 380px;
+        overflow-x: hidden;
+        overflow-y: auto;
+        text-align: left;
+    }
+</style>
+<div id="main" class="box" style="display: flex; flex-direction: row;">
+    <div id="info" class="container" style="margin: 2em; width: fit-content;">
+        <img src="{{ MEDIA_URL }}{{ group.group_pic.url }}"
+            style="width: 800px; height: 300px; object-fit: cover; border-radius: 1.5em;">
+        <h1 style="margin-top: 20px;">{{ group.name }}</h1>
+        <p style="margin-top: 20px; margin-bottom: 40px;">{{ group.description }}</p>
+        <h5 style="margin-bottom: 20px;">Interests</h5>
+        <ul style="list-style-type: none; padding: 0;">
+            <div style="display:flex; flex-direction:row;">
+                {% for interest in group.interests.all %}
+                <li>
+                    <div
+                        style="border: 0.1em solid; border-radius: 1em; width: fit-content; padding: 5px; padding-left: 15px; padding-right: 15px; margin-right: 10px;;">
+                        {{ interest.name }}
+                    </div>
+
+                </li>
+                {% endfor %}
+            </div>
+        </ul>
+        <h5 style="margin-top: 40px;">Available on:</h5>
+        <p style="margin-bottom: 40px;">
+            {% if group.connected_group.all %}
+            {% for date in group.connected_group.all %}
+            {{ date.date }}
+            {% endfor %}
+            {% else %}
+            Sorry, this group has not specified any available dates.
+            {% endif %}
+        </p>
+        {% if group in user.groupupuser.get_groups %}
+        <a class="btn btn-outline-success" href="{% url 'accounts:group_matches' group.id %}">See matches for {{ group.name }}!</a>
+        {% endif %}
+        {% if group in user.groupupuser.get_groups_where_admin %}
+        <p>
+            <a class="btn btn-outline-success" style="margin-top:1em;"
+                href="{% url 'group_admin:view_match' group.id %}">
+                See match requests for {{ group.name }}
+            </a>
+        </p>
+        {% endif %}
+        {% if group.reviews.all %}
+        <h5 style="margin-bottom: 10px">Reviews</h5>
+        <ul style="list-style-type: none; margin: 0; padding: 0;">
+            {% for review in group.get_reviews %}
+            <li>
+                <div
+                    style="border: 0.1em solid black; margin-top: 0.5em; border-radius: .3em; display: flex; justify-content: space-between;">
+                    <p style="margin: 0; padding: 1em;">{{ review.review }}</p>
+                    <p style="margin: 0; padding: 1em; border-left: 0.1em solid black;">{{ review.date_published }}
+                    </p>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </div>
+    <div id="sidepanel" class="container" style="margin: 2em; color: white">
+        <div style="margin: 1em; width: fit-content;">
+            <p>Age-gap: {{ group.get_age_gap }}</p>
+            <p>Admin E-mail: {{ group.admin_contact }}</p>
+            <h5>Group members</h3>
+        </div>
+        <div class="scroll">
+            <ul class="list-group">
+                {% for member in group.members.all %}
+                <li class="list-group-item">
+                    <form class="delete-form d-flex">
+                        {% csrf_token %}
+                        <a href="{% url 'accounts:invites' %}">
+                            <img class="profile-pic" src="{{ MEDIA_URL }}{{ member.profile_pic.url }}">
+                        </a>
+                        <span class="align-self-center mx-3">{{ member.user.username }}</span>
+                        {% if user.groupupuser == group.group_admin and member != user.groupupuser %}
+                        <input type="hidden" name="user_id" class="delete-form-user-id" value="{{ member.user.pk }}">
+                        <div class="d-flex flex-grow-1"></div>
+                        <button type="submit" class="btn btn-danger" style="line-height: 0;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                                class="bi bi-trash" viewBox="0 0 16 16">
+                                <path
+                                    d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
+                                <path fill-rule="evenodd"
+                                    d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
+                            </svg>
+                        </button>
+                        {% endif %}
+                    </form>
+                </li>
+                {% endfor %}
+            </ul>
+            {% block invite_user %}
+                {% if group in user.groupupuser.get_groups_where_admin %}
+                    <h2>Invite users</h2>
+                    <form method="post">
+                        {% csrf_token %}
+                        {% bootstrap_form invite_form %}
+                        {% buttons %}
+                            <button type="submit" name="invite_user" class="btn btn-primary">
+                            Invite!
+                            </button>
+                        {% endbuttons %}
+                    </form>
+                {% endif %}
+            {% endblock %}
+
+        </div>
+    </div>
+</div>
+{% block admin_content %}
+{% if user.groupupuser.is_a_group_admin %}
+<div class="container" style="margin: 0 2em 2em 2em;">
+    {% if group in user.groupupuser.get_groups_where_admin %}
+    <h2>Add or remove available dates</h2>
+    <form action="{% url 'group_admin:add_date' group.id %}" method="post">
+        {% csrf_token %}
+        {% bootstrap_form add_date %}
+        {% buttons %}
+        <button type="submit" class="btn btn-primary admin-buttons">
+            Add
+        </button>
+        {% endbuttons %}
+        {{ add_date.non_field_errors }}
+    </form>
+    <form action="{% url 'group_admin:remove_date' group.id %}" method="post">
+        {% csrf_token %}
+        {{ remove_date }}
+        {% buttons %}
+        <button type="submit" class="btn btn-primary admin-buttons" style="margin: 1em 0;">
+            Remove
+        </button>
+        {% endbuttons %}
+    </form>
+    <a href="{% url 'group_admin:delete_group' group.id %}" class="btn btn-danger">Delete Group</a>
+    {% else %}
+    <div style="display: flex; flex-direction: column; gap: 1rem;">
+        {% if group.connected_group.all %}
+        <h2>Wanna match?</h2>
+        {% for usergroup in user.groupupuser.get_groups_where_admin %}
+        {% if group not in usergroup.get_related_groups %}
+        <div>
+            <a class="btn btn-primary" href="{% url 'group_admin:send_match' usergroup.id %}"
+                style="width: 40%; word-break; break-word;">
+                Send match request on behalf of {{ usergroup.name }}
+            </a>
+        </div>
+        {% endif %}
+        {% endfor %}
+        {% endif %}
+
+        {% if group in user.groupupuser.confirmed_groups_where_admin %}
+        <h2>Have you met this group?</h2>
+        {% endif %}
+        {% for usergroup in user.groupupuser.get_groups_where_admin %}
+        {% if group in usergroup.get_confirmed_groups %}
+        <div>
+            <a href="{% url 'group_admin:set_met' usergroup.id %}" class="btn btn-primary" style="width: 40%;">
+                {{ usergroup.name }} have met this group
+            </a>
+        </div>
+        {% endif %}
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+{% endif %}
+
+<script>
+    const deleteForms = document.querySelectorAll(".delete-form");
+    for (const form of deleteForms) {
+        form.addEventListener("submit", async e => {
+            e.preventDefault();
+            console.log(e)
+            const id = e.target.querySelector(".delete-form-user-id").value;
+            await fetch(`/groups/{{ group.pk }}/remove-member/${id}`);
+            e.target.parentNode.remove();
+        });
+    }
+</script>
+{% endblock %}
+{% endblock %}

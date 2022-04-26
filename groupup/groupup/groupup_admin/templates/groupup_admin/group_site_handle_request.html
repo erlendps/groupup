@@ -1,0 +1,15 @@
+{% extends 'accounts/group_site.html' %}
+{% load bootstrap5 %}
+
+{% block invite_user %}{% endblock %}
+
+{% block admin_content %}
+<div class="container" style="margin-left: 2em;">
+  <h2>Handle match request</h2>
+  <form method="post" style="margin-bottom: 1em;">
+    {% csrf_token %}
+    {% bootstrap_form form %}
+    <input type="submit" class="btn btn-primary" value="OK">
+  </form>
+</div>
+{% endblock %}

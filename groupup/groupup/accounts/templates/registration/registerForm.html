@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Register User</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  {# Load the tag library #}
+  {% load bootstrap5 %}
+
+  {# Load CSS and JavaScript #}
+  {% bootstrap_css %}
+  {% bootstrap_javascript %}
+
+  {# Display django.contrib.messages as Bootstrap alerts #}
+  {% bootstrap_messages %}
+
+  {% load static %}
+
+  {# Interests widget #}
+  <link rel="stylesheet" type="text/css" href="{% static 'groupup/css/interests_widget.css' %}">
+  <script src='{% static "groupup/js/interests_widget.js" %}'></script>
+</head>
+
+<body class="d-flex flex-column">
+  <div style="display: flex; flex-direction: column; align-items: center; margin-top: 40px;">
+    <a href="/">
+      {% load static %} <img src="{% static 'groupup/img/GroupUp_logo.png' %}" alt="groupuplogo"
+        style="height: 200px; object-fit: scale-down;" />
+    </a>
+    <div style=" margin-top: 40px; display: flex; flex-direction: column; align-items: center;">
+      <h2 style="margin-bottom: 30px;">Sign up</h2>
+      <div>
+        <form method="post" enctype="multipart/form-data" style="display: flex; flex-direction: column;">
+          {% csrf_token %}
+          {% bootstrap_form form %}
+          <button class="btn btn-success" type="submit">Submit</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  <footer class="bg-light text-center" style="margin-top: 3em">
+    <div class="container p-4">
+      <div class="row">
+        <div class="col-md-1 col-xl-1"></div>
+        <div class="col-md-10 col-xl-10">
+          <h5 class="text-uppercase">About</h5>
+          <p>
+            This is our project in the course TDT4140 "Programvareutvikling". The project uses the django framework
+            with bootstrap as our frontend framework. All source code is on the groups
+            <a href="https://gitlab.stud.idi.ntnu.no/tdt4140-2022/landsby-2/gruppe_32/groupup">gitlab.</a>
+          </p>
+        </div>
+        <div class="col-md-1 col-xl-1"></div>
+      </div>
+    </div>
+  </footer>
+</body>
+
+</html>

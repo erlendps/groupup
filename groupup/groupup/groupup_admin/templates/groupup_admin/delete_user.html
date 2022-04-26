@@ -1,0 +1,20 @@
+{% extends 'accounts/base.html' %}
+
+{% block title %}Delete group site{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-2 col-xl-2"></div>
+        <div class="col-md-8 col-xl-8">
+            <h1 style="text-align: center; margin-bottom: 2em;">Are you sure you want to delete {{ group.name }}</h1>
+            <form method="post" style="display: flex; justify-content: center; gap: 1em;">
+                {% csrf_token %}
+                <button type="submit" name="delete" class="btn btn-danger">Yes, I am sure</button>
+                <button type="submit" name="cancel" class="btn btn-success">No, cancel</button>
+            </form>
+        </div>
+        <div class="col-md-2 col-xl-2"></div>
+    </div>
+</div>
+{% endblock %}
